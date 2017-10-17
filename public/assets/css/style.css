@@ -1,0 +1,107 @@
+.navbar-default {
+    margin-right: 30px;
+    margin-left: 30px;
+}
+
+.navbar-default .glyphicon{
+  font-size: 17px;
+}
+
+.navbar-default .navbar-nav>li>a>.glyphicon-plus{
+  color: #33d40d;
+  font-size: 17px;
+
+}
+
+.navbar-default .navbar-nav>li>a>b>sub{
+  position: absolute;
+  line-height: 2;
+}
+
+.orders{
+  max-height: 450px;
+   overflow-y:scroll;
+
+}
+.order-data{
+  width: 100%;
+  border-width: 2px;
+  border-bottom-width:2px;
+  border-bottom-color:White;
+  border-bottom-style:groove;
+  margin-bottom: 12px;
+  min-height: 115px;
+}
+
+.order-data .order-number{
+display: inline-block;
+font-size: 16px;
+font-weight: bold;
+}
+
+.order-data .order-date {
+  float: left;
+  display: inline;
+}
+
+.order-data .label{
+  display: inline;
+  float: left;
+  margin:2px 210px 0 0;
+}
+
+.order-data .order-item{
+  margin-left: 0px;
+  max-width: 50px;
+}
+.order-data .order-total{
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.item-table>tbody>tr>th, .item-table>tbody>tr>td
+,.pricing-table>tbody>tr>th, .pricing-table>tbody>tr>td{
+      text-align: right;
+      border: 1;
+      padding: 3px;
+      min-width: 130px;
+}
+
+
+.panel-heading .glyphicon{
+  color:#337ab7;
+  float: left;
+  font-size: 18px;
+}
+.panel-body, .panel-footer{
+       border-top: 1;
+  padding: 0;
+}
+.item-table, .pricing-table{
+  margin: 0;
+}
+
+.file-list{
+  min-height: 450px;
+  padding:20% 30% 0 0;
+
+
+}
+.file-list .glyphicon{
+   font-size: 75px;
+   color:#7b7b7b
+}
+
+.text-info{
+  max-width: 100%;
+  min-width: 100%;
+  max-height: 250px;
+  min-height: 110px;
+}
+
+.new-order-form{
+  margin-top: 20px;
+}
+.check-box-span{
+  padding-right: 15px;
+}

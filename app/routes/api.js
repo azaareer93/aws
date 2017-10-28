@@ -30,7 +30,17 @@ module.exports = function(router) {
         }).catch(err=>{
           res.json({success:true,message:'erro with getting orders'});
         });
-});
+      });
+
+  router.post('/orders/',function(req,res){
+        console.log(req.query);
+        res.json({success:true,message:'we have got your order'});
+        // Orders.find({}).then(function (orders) {
+        //       res.json({success:true, orders:orders});
+        // }).catch(err=>{
+        //   res.json({success:true,message:'erro with getting orders'});
+        // });
+      });
 //
 //   router.post('/checkuser',function(req,res){
 //     var userToCheck={

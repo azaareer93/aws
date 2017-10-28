@@ -21,22 +21,28 @@
     </ul>
     <ul class="nav navbar-nav navbar-right">
       <li>
+        <label for="order-status">  وضع الطلب:</label>
+          <div class="btn-group btn-group-sm order-status" id="order-status">
+            <button type="button" class="btn btn-primary">لم يبدأ</button>
+            <button type="button" class="btn btn-primary">تحت التنفيذ</button>
+            <button type="button" class="btn btn-primary">مكتمل</button>
+          </div>
+      </li>
+      <li class="empty-li"> </li>
+      <li>
+        <label for="payment-status">وضع الدفع</label>
+        <div class="btn-group btn-group-sm payment-status" id="order-status">
+          <button type="button" class="btn btn-primary"> غير مدفوع</button>
+          <button type="button" class="btn btn-primary"> جزئي</button>
+          <button type="button" class="btn btn-primary">كلي</button>
+        </div>
+      </li>
+      <li>
         <a>
           <b> رقم الطلب: #100
           <sub>10/6/2017</sub>
         </b>
         </a>
-      </li>
-      <li><a href="#">Link</a></li>
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li><a href="#">Action</a></li>
-          <li><a href="#">Another action</a></li>
-          <li><a href="#">Something else here</a></li>
-          <li role="separator" class="divider"></li>
-          <li><a href="#">Separated link</a></li>
-        </ul>
       </li>
     </ul>
   </div><!-- /.navbar-collapse -->

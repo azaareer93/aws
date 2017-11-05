@@ -3,7 +3,7 @@ angular.module('queryService',[])
 var  queryService = {};
 //qService.query('POST',"/api/regUser",RegData)
 
-queryService.query=function(method, url, params, data,headers,transformRequest){
+queryService.query=function(method, url,data,params,headers,transformRequest){
 var options={
           method: method,
           url:url,

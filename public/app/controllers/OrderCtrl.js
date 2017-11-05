@@ -1,20 +1,22 @@
 angular.module('OrderController', ['AuthServices', 'queryService'])
   .controller('OrderCtrl', function($scope, Auth, qService) {
-    $scope.order = {}
-    $scope.order.items=[]
+    $scope.Order = {}
+    $scope.Order.Items=[]
     $scope.addItem = function (item) {
-      $scope.order.items.push(item)
+      console.log(item);
+      $scope.Order.Items.push(item)
       $scope.item = null
-      console.log($scope.order.items);
     }
 
     $scope.saveOrder = function(order) {
+      order = $scope.Order
       console.log(order);
-      qService.query("POST", "/api/orders/", order).then(function(data) {
-        console.log(data);
+      qService.query('POST', "/api/orders/", order).then(function(data) {
         if (data.data.success) {
           console.log(data.data.message);
         }
+        console.log(data.data.message);
+
       }).catch(function(err) {
         console.log(err);
       });

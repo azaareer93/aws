@@ -15,7 +15,7 @@ var server = require('http').createServer(app);
 var cron   = require('node-cron');
 var logger = require('express-logger');
 
-
+//
 
 
 app.use(function(req, res, next) {
@@ -35,15 +35,15 @@ app.set('view engine', 'html');
 app.use('/api',appRoutes);// e.g : http://localhost:3000/api/users // to be diffrent from angular routes
 app.use(logger({path: "logs.log"}));
 
-// mongoose.connect('mongodb://localhost:27017/awsOrders',function(err){
-//   if(err){
-//     console.log('not connected to database'+ err);
-//   }
-//   else {
-//     console.log('connected to mongodb');
-//   }
-//
-// });
+mongoose.connect('mongodb://localhost:27017/aws',function(err){
+  if(err){
+    console.log('not connected to database'+ err);
+  }
+  else {
+    console.log('connected to mongodb');
+  }
+
+});
 
 
  app.get('*',function(req,res){

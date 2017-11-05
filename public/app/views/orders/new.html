@@ -6,29 +6,33 @@
         <div class="col-md-6">
           <div class="form-group">
             <label for="item">الاسم</label>
-            <input type="text" class="form-control" id="item" ng-model="order.client.name" placeholder="">
+            <input type="text" class="form-control" id="item" ng-model="Order.Client.Name" placeholder="">
           </div>
           <div class="form-group">
             <label for="quantity">العنوان</label>
-            <input type="text" class="form-control" id="quantity" ng-model="order.client.address" placeholder="">
+            <input type="text" class="form-control" id="quantity" ng-model="Order.Client.Address" placeholder="">
           </div>
           <div class="form-group">
             <label for="bgcolor"> التاريخ</label>
-            <input type="date" class="form-control" id="bgcolor" ng-model="order.date" placeholder="">
+            <input type="date" class="form-control" id="bgcolor" ng-model="Order.date" placeholder="">
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label for="item">الهاتف</label>
-            <input type="text" class="form-control" id="item" ng-model="order.client.phone" placeholder="">
+            <label for="item">الهاتف1</label>
+            <input type="text" class="form-control" id="tel1" ng-model="Order.Client.Tel1" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="item">الهاتف2</label>
+            <input type="text" class="form-control" id="tel2" ng-model="Order.Client.Tel2" placeholder="">
           </div>
           <div class="form-group">
             <label for="quantity">الفاكس</label>
-            <input type="text" class="form-control" id="quantity" ng-model="order.client.fax" placeholder="">
+            <input type="text" class="form-control" id="quantity" ng-model="Order.Client.Fax" placeholder="">
           </div>
           <div class="form-group">
             <label for="bgcolor">البريد الالكتروني</label>
-            <input type="email" class="form-control" id="bgcolor" ng-model="order.client.email" placeholder="">
+            <input type="email" class="form-control" id="bgcolor" ng-model="Order.Client.Email" placeholder="">
           </div>
         </div>
       </div>
@@ -37,26 +41,42 @@
         <div class="col-md-6">
           <div class="form-group">
             <label for="item">العينة</label>
-            <input type="text" class="form-control" id="item" ng-model="item.name" placeholder="">
+            <input type="text" class="form-control" id="item" ng-model="item.Name" placeholder="">
           </div>
           <div class="form-group">
             <label for="quantity">الكمية</label>
-            <input type="text" class="form-control" id="quantity" ng-model="item.quantity" placeholder="">
+            <input type="text" class="form-control" id="quantity" ng-model="item.Quantity" placeholder="">
           </div>
           <div class="form-group">
             <label for="bgcolor">لون الارضية</label>
-            <input type="text" class="form-control" id="bgcolor" ng-model="item.bgcolor" placeholder="">
+            <input type="text" class="form-control" id="bgcolor" ng-model="item.GColor" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="bgcolor"> الحجم </label>
+            <input type="text" class="form-control" id="bgcolor" ng-model="item.Size" placeholder="">
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
             <label for="extra">معلومات اضافية</label>
-            <textarea class="form-control text-info" rows="3" class="form-control" ng-model="extra" id="extra" placeholder=""></textarea>
+            <textarea class="form-control text-info" rows="3" class="form-control" ng-model="item.Note" id="extra" placeholder=""></textarea>
           </div>
           <div class="form-group">
             <label for="pcolor">لون الطباعة</label>
-            <input type="text" class="form-control" id="pcolor" ng-model="item.pcolor" placeholder="">
+            <input type="text" class="form-control" id="pcolor" ng-model="item.PColor" placeholder="">
           </div>
+          <div class="checkbox">
+          <label>
+            <input class="pull-right" type="checkbox" ng-model="item.PrintOnChest">
+            <span class="check-box-span"> الطباعة على الوجه </span>
+          </label>
+        </div>
+        <div class="checkbox">
+        <label>
+          <input class="pull-right" type="checkbox" ng-model="item.PrintOnBack">
+          <span class="check-box-span"> الطباعة على الظهر </span>
+        </label>
+      </div>
         </div>
       </div>
 
@@ -64,37 +84,37 @@
         <div class="col-md-2">
           <div class="form-group">
             <label for="pcolor">S</label>
-            <input type="number" class="form-control" id="pcolor" ng-model="item.size['s']" placeholder="">
+            <input type="number" class="form-control" id="pcolor" ng-model="item['s']" placeholder="">
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
             <label for="pcolor">M</label>
-            <input type="number" class="form-control" id="pcolor" ng-model="item.size['m']" placeholder="">
+            <input type="number" class="form-control" id="pcolor" ng-model="item['m']" placeholder="">
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
             <label for="pcolor">L</label>
-            <input type="number" class="form-control" id="pcolor" ng-model="item.size['l']" placeholder="">
+            <input type="number" class="form-control" id="pcolor" ng-model="item['l']" placeholder="">
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
             <label for="pcolor">XL</label>
-            <input type="number" class="form-control" id="pcolor" ng-model="item.size['xl']" placeholder="">
+            <input type="number" class="form-control" id="pcolor" ng-model="item['xl']" placeholder="">
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
             <label for="pcolor">XXL</label>
-            <input type="number" class="form-control" id="pcolor" ng-model="item.size['xxl']" placeholder="">
+            <input type="number" class="form-control" id="pcolor" ng-model="item['xxl']" placeholder="">
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
             <label for="pcolor">XXL</label>
-            <input type="number" class="form-control" id="pcolor" ng-model="item.size['xxxl']" placeholder="">
+            <input type="number" class="form-control" id="pcolor" ng-model="item['xxxl']" placeholder="">
           </div>
         </div>
       </div>
@@ -103,43 +123,43 @@
         <div class="col-md-2">
           <div class="form-group">
             <label for="pcolor">6</label>
-            <input type="number" class="form-control" id="pcolor" ng-model="item.size['6']" placeholder="">
+            <input type="number" class="form-control" id="pcolor" ng-model="item['6']" placeholder="">
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
             <label for="pcolor">8</label>
-            <input type="number" class="form-control" id="pcolor" ng-model="item.size['8']" placeholder="">
+            <input type="number" class="form-control" id="pcolor" ng-model="item['8']" placeholder="">
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
             <label for="pcolor">10</label>
-            <input type="number" class="form-control" id="pcolor" ng-model="item.size['10']" placeholder="">
+            <input type="number" class="form-control" id="pcolor" ng-model="item['10']" placeholder="">
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
             <label for="pcolor">12</label>
-            <input type="number" class="form-control" id="pcolor" ng-model="item.size['12']" placeholder="">
+            <input type="number" class="form-control" id="pcolor" ng-model="item['12']" placeholder="">
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
             <label for="pcolor">14</label>
-            <input type="number" class="form-control" id="pcolor" ng-model="item.size['14']" placeholder="">
+            <input type="number" class="form-control" id="pcolor" ng-model="item['14']" placeholder="">
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
             <label for="pcolor">16</label>
-            <input type="number" class="form-control" id="pcolor" ng-model="item.size['16']" placeholder="">
+            <input type="number" class="form-control" id="pcolor" ng-model="item['16']" placeholder="">
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
             <label for="pcolor">18</label>
-            <input type="number" class="form-control" id="pcolor" ng-model="item.size['18']" placeholder="">
+            <input type="number" class="form-control" id="pcolor" ng-model="item['18']" placeholder="">
           </div>
         </div>
       </div>
@@ -150,7 +170,7 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <table class="table" ng-if='order.items.length>0'>
+          <table class="table" ng-if='Order.Items.length>0'>
             <thead>
               <tr>
                 <th>العينة</th>
@@ -163,15 +183,15 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="item in order.items track by $index">
-                <td>{{item.name}}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+              <tr ng-repeat="item in Order.Items track by $index">
+                <td>{{item.Name}}</td>
+                <td>{{item.Quantity}}</td>
+                <td>{{item.GColor}}</td>
+                <td>{{item.PColor}}</td>
+                <td>{{item.Note}}</td>
+                <td>{{item.Size}}</td>
+                <td>{{item.PainOnChest}}</td>
+                <td>{{item.PainOnBack}}</td>
               </tr>
             </tbody>
           </table>
@@ -182,37 +202,16 @@
         <div class="col-md-6">
           <div class="form-group">
             <label for="item">السعر</label>
-            <input type="text" class="form-control" id="item" ng-model="order.price.total" ng-init=0>
+            <input type="text" class="form-control" id="item" ng-model="Order.TotalPrice" ng-init=0>
           </div>
           <div class="form-group">
             <label for="quantity">عربون</label>
-            <input type="text" class="form-control" id="quantity" ng-model="order.price.down_payment" ng-init=0>
+            <input type="text" class="form-control" id="quantity" ng-model="Order.Payment.Ammount" ng-init=0>
           </div>
           <div class="form-group">
             <label for="bgcolor">الباقي </label>
-            <input type="text" class="form-control" id="bgcolor" ng-model="order.price.remaining" ng-value=order.price.remaining=order.price.total-order.price.down_payment>
+            <input type="text" class="form-control" id="bgcolor" ng-value=Order.TotalPrice-Order.Payment.Ammount disabled>
           </div>
-        </div>
-        <div class="col-md-6">
-            <div class="checkbox">
-            <label>
-              <input class="pull-right" type="checkbox" ng-model="order.client_approve">
-              <span class="check-box-span"> موافقة الزبون</span>
-            </label>
-          </div>
-          <div class="checkbox">
-          <label>
-            <input type="checkbox" ng-model="order.review">
-            <span class="check-box-span">التدقيق</span>
-
-          </label>
-        </div>
-        <div class="checkbox">
-        <label>
-          <input type="checkbox" ng-model="order.process">
-          <span class="check-box-span"> التنفيذ </span>
-        </label>
-      </div>
         </div>
       </div>
       <div class="row">
@@ -228,6 +227,6 @@
 </div>
 <div class="col-md-8 col-md-offset-2 pull-right" dir="ltr">
   <pre>
-{{order | json}}
+{{Order | json}}
   </pre>
 </div>

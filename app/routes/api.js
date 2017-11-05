@@ -33,14 +33,16 @@ module.exports = function(router) {
       });
 
   router.post('/orders/',function(req,res){
-        console.log(req.query);
-        res.json({success:true,message:'we have got your order'});
-        // Orders.find({}).then(function (orders) {
-        //       res.json({success:true, orders:orders});
-        // }).catch(err=>{
-        //   res.json({success:true,message:'erro with getting orders'});
-        // });
-      });
+        var order = new Orders(req.body);
+        order.save().then(function (err,order) {
+          if (err) {
+            res.json({success:false, message:err});
+          }else {
+            res.json({success:true, order:order, message:"order was saved"})
+          }
+
+        })
+    });
 //
 //   router.post('/checkuser',function(req,res){
 //     var userToCheck={

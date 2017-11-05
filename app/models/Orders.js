@@ -1,75 +1,153 @@
-// var mongoose   = require('mongoose');
-// var Schema     = mongoose.Schema;
-// var validate   = require('mongoose-validator');
-//  mongoose.Promise = global.Promise;
-//
-//  var OrderSchema = new Schema({
-//     orderedBy:{
-//       type:String,
-//       lowercase:true,
-//       required:true
-//     },
-//     recipientId:{
-//       type:String,
-//       required:true
-//     },
-//     company:{
-//       type:String
-//     },
-//     orderItems:[{
-//         itemName:{
-//           type:String,
-//           lowercase:true,
-//           required:true
-//         },
-//         itemPrice:{
-//           type:Number,
-//           required:true
-//         },
-//         quantity:{
-//           type:Number,
-//           required:true
-//         },
-//         total:{
-//           type:Number,
-//           required:true
-//         },
-//         purchased:{
-//           type:Boolean,
-//           default:false
-//         },
-//         restaurant : {
-//           type:String,
-//           lowercase:true,
-//           required:true
-//         },
-//         restOwner : {
-//           type:String,
-//           required : true
-//         },
-//         status : {
-//           type : String,
-//           default : 'pending'
-//         }
-//     }],
-//     date:{
-//       type:Date,
-//       required:true,
-//       default:new Date().toJSON().split('T')[0]
-//     },
-//     time : {
-//       type:String,
-//       required : true
-//     },
-//     purchased :{
-//       type:Boolean,
-//       default:false
-//     },
-//     checkedOut :{
-//       type:Boolean,
-//       default:false
-//     }
-// });
-//
-//
-// module.exports=mongoose.model('Orders',OrderSchema);
+var mongoose   = require('mongoose');
+var Schema     = mongoose.Schema;
+var validate   = require('mongoose-validator');
+ mongoose.Promise = global.Promise;
+
+ var OrderSchema = new Schema({
+    TotalPrice:{
+      type:Number,
+      default:null
+    },
+    Payment:[{
+      Ammount:{
+        type:String,
+        default:null
+      },
+      PaymentDate:{
+          type:Date,
+          default:new Date().toJSON().split('T')[0]
+      }
+    }],
+    Status:{
+      type:String,
+      default:null
+    },
+    Note:{
+      type:String,
+      default:null
+    },
+    Client:{
+      Name:{
+        type:String,
+        default:null
+      },
+      Address:{
+        type:String,
+        default:null
+      },
+      Tel1:{
+        type:String,
+        default:null
+      },
+      Tel2:{
+        type:String,
+        default:null
+      },
+      Fax:{
+        type:String,
+        default:null
+      },
+      Email:{
+        type:String,
+        default:null
+      }
+    },
+    Items:[{
+        Name:{
+          type:String,
+          default:null
+        },
+        Quantity:{
+          type:String,
+          default:null
+        },
+        Size:{
+          type:String,
+          default:null
+        },
+        GColor:{
+          type:String,
+          default:null
+        },
+        PColor:{
+          type:String,
+          default:null
+        },
+        PrintOnChest:{
+          type:Boolean,
+          default:null
+        },
+        PrintOnBack:{
+          type:Boolean,
+          default:null
+        },
+        Note:{
+          type:String,
+          default:null
+        },
+        s:{
+          type:Number,
+          default:null
+        },
+        m:{
+          type:Number,
+          default:null
+        },
+        l:{
+          type:Number,
+          default:null
+        },
+        xl:{
+          type:Number,
+          default:null
+        },
+        xxl:{
+          type:Number,
+          default:null
+        },
+        xxxl:{
+          type:Number,
+          default:null
+        },
+        4:{
+          type:Number,
+          default:null
+        },
+        6:{
+          type:Number,
+          default:null
+        },
+        8:{
+          type:Number,
+          default:null
+        },
+        10:{
+          type:Number,
+          default:null
+        },
+        12:{
+          type:Number,
+          default:null
+        },
+        14:{
+          type:Number,
+          default:null
+        },
+        16:{
+          type:Number,
+          default:null
+        },
+        18:{
+          type:Number,
+          default:null
+        },
+    }],
+    date:{
+      type:Date,
+      required:true,
+      default:new Date().toJSON().split('T')[0]
+    },
+});
+
+
+module.exports=mongoose.model('Orders',OrderSchema);

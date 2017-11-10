@@ -39,7 +39,7 @@
       </li>
       <li>
         <a>
-          <b> رقم الطلب: #100
+          <b> رقم الطلب: #{{index+1}}
           <sub>10/6/2017</sub>
         </b>
         </a>
@@ -52,33 +52,19 @@
 <div class="container ">
   <div class="row">
     <div class="col-md-3">
-      <div class="orders well">
-        <div class="order-data">
-          <div class="order-number"> رقم الطلب: 100 </div>
-          <small class="order-date">15/10/2017</small>
-          <span class="label label-success">Success</span>
-          <span class="label label-danger">Danger</span>
-          <div class="order-item"> 200 علبة </div>
-          <div class="order-total"> المجموع: 100$ </div>
+      <div class="orders well" >
+        <div class="order-data"
+         ng-class="{true: 'active'}[$index ==  index]"
+          ng-repeat="Order in OrderList | orderBy:'date'">
+          <div class="order-link" ng-click=selectOrder($index)>
+            <div class="order-number"> رقم الطلب: {{$index+1}} </div>
+            <small class="order-date">{{Order.date | date : 'EEE, d/MMM/y'}}</small>
+            <span class="label label-success">Success</span>
+            <span class="label label-danger">Danger</span>
+            <div class="order-item"> عدد العناصر : {{Order.Items.length}}</div>
+            <div class="order-total"> السعر : {{Order.TotalPrice}} </div>
+          </div>
         </div>
-
-        <div class="order-data">
-          <div class="order-number"> رقم الطلب: 100 </div>
-          <small class="order-date">15/10/2017</small>
-          <span class="label label-danger">Danger</span>
-          <span class="label label-warning">warning</span>
-          <div class="order-item"> 200 علبة </div>
-          <div class="order-total"> المجموع: 100$ </div>
-        </div>
-        <div class="order-data">
-          <div class="order-number"> رقم الطلب: 100 </div>
-          <small class="order-date">15/10/2017</small>
-          <span class="label label-danger">Danger</span>
-          <span class="label label-danger">Danger</span>
-          <div class="order-item"> 200 علبة </div>
-          <div class="order-total"> المجموع: 100$ </div>
-        </div>
-
       </div>
     </div>
     <div class="col-md-3">
@@ -90,41 +76,15 @@
          </div>
            <div class="panel-body">
              <table class="table item-table">
-               <tbody>
+               <tbody ng-repeat="item in OrderList[index].Items">
                  <tr>
-                  <th>العنصر: </th>
-                  <td>نصار</td>
+                  <th>#{{$index+1}}</th>
+                  <td>{{item.Name}}</td>
+                  <td><button class="btn btn-sm btn-block"
+                     data-toggle="modal" data-target="#itemModal" ng-click=viewItem(item)>view</button></td>
                 </tr>
-                 <tr>
-                   <th>الحجم: </th>
-                   <td>12" × 15"</td>
-                 </tr>
-                 <tr>
-                 <th> نوع الورق: </th>
-                   <td> 4444 </td>
-                 </tr>
-                 <tr>
-                   <th> اللون:  </th>
-                   <td>زفت</td>
-                 </tr>
-                 <tr>
-                   <th> الكمية:  </th>
-                   <td>15000</td>
-                 </tr>
-                 <tr>
-                   <th> السعر: </th>
-                   <td>$500</td>
-                 </tr>
-                 <tr>
-                   <th> معلومات اضافية:  </th>
-                   <td>لالالا</td>
-                 </tr>
-                 <tr>
-                   <th>رقم الطباعة: </th>
-                   <td>1511</td>
-                 </tr>
-               <tbody>
-             </table>
+              </tbody>
+            </table>
            </div>
          </div>
       </div>
@@ -136,7 +96,34 @@
            <a href=""> <span class="glyphicon glyphicon-edit"></span> </a>
           </div>
            <div class="panel-body">
-             nassar@nassar.com
+             <table class="table item-table">
+               <tbody>
+                 <tr>
+                  <th>الاسم: </th>
+                  <td>{{OrderList[index].Client.Name}}</td>
+                </tr>
+                 <tr>
+                   <th>البريد الالكتروني: </th>
+                   <td>{{OrderList[index].Client.Email}}</td>
+                 </tr>
+                 <tr>
+                   <th>العنوان: </th>
+                   <td>{{OrderList[index0].Client.Address}}</td>
+                 </tr>
+                 <tr>
+                   <th> الهاتف:  </th>
+                   <td>{{OrderList[index].Client.Tel1}}</td>
+                 </tr>
+                 <tr>
+                   <th> الهاتف2:  </th>
+                   <td>{{OrderList[index0].Client.Tel2}}</td>
+                 </tr>
+                 <tr>
+                   <th> فاكس:  </th>
+                   <td>{{OrderList[index].Client.Fax}}</td>
+                 </tr>
+               <tbody>
+             </table>
            </div>
         </div>
       </div>
@@ -186,11 +173,11 @@
              <tbody>
                <tr>
                  <th> السعر: </th>
-                 <td>$500</td>
+                 <td>{{OrderList[index].TotalPrice}}</td>
                </tr>
                <tr>
                  <th> معلومات اضافية:  </th>
-                 <td>لالالا</td>
+                 <td>--</td>
                </tr>
              <tbody>
            </table>
@@ -200,7 +187,7 @@
               <tbody>
                 <tr>
                   <th> المجموع:  </th>
-                  <td>لالالا</td>
+                  <td>--</td>
                 </tr>
               <tbody>
             </table>
@@ -258,4 +245,99 @@
         </div>
       </div>
     </div>
+</div>
+
+
+<!-- item modal -->
+<div class="modal fade" id="itemModal" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">العينة</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table item-table">
+          <tbody>
+            <tr>
+             <th>العنصر: </th>
+             <td>{{ItemToView.Name}}</td>
+           </tr>
+            <tr>
+              <th>الحجم: </th>
+              <td>{{ItemToView.Size}}</td>
+            </tr>
+            <tr>
+            <th>لون الارضية: </th>
+            <td>{{ItemToView.GColor}}</td>
+            </tr>
+            <tr>
+              <th>لون الطباعة</th>
+              <td>{{ItemToView.PColor}}</td>
+            </tr>
+            <tr>
+              <th> معلومات اضافية:  </th>
+              <td>{{ItemToView.Note}}</td>
+            </tr>
+            <tr>
+              <th>رقم الطباعة: </th>
+              <td>---</td>
+            </tr>
+          <tbody>
+        </table>
+        <table class="table item-table table-bordered table-condensed">
+          <thead>
+            <th>s</th>
+            <th>m</th>
+            <th>l</th>
+            <th>xl</th>
+            <th>xxl</th>
+            <th>xxxl</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ItemToView.s}}</td>
+              <td>{{ItemToView.m}}</td>
+              <td>{{ItemToView.l}}</td>
+              <td>{{ItemToView.xl}}</td>
+              <td>{{ItemToView.xxl}}</td>
+              <td>{{ItemToView.xxxl}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <br>
+        <table class="table item-table table-bordered table-condensed">
+          <thead>
+            <th>4</th>
+            <th>6</th>
+            <th>8</th>
+            <th>10</th>
+            <th>12</th>
+            <th>14</th>
+            <th>16</th>
+            <th>18</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ItemToView[4]}}</td>
+              <td>{{ItemToView[6]}}</td>
+              <td>{{ItemToView[8]}}</td>
+              <td>{{ItemToView[10]}}</td>
+              <td>{{ItemToView[12]}}</td>
+              <td>{{ItemToView[14]}}</td>
+              <td>{{ItemToView[16]}}</td>
+              <td>{{ItemToView[18]}}</td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
 </div>

@@ -6,33 +6,33 @@
         <div class="col-md-6">
           <div class="form-group">
             <label for="item">الاسم</label>
-            <input type="text" class="form-control" id="item" ng-model="Order.Client.Name" placeholder="">
+            <input type="text" class="form-control" id="item" ng-model="Order.Client.Name" placeholder="" required>
           </div>
           <div class="form-group">
             <label for="quantity">العنوان</label>
-            <input type="text" class="form-control" id="quantity" ng-model="Order.Client.Address" placeholder="">
+            <input type="text" class="form-control" id="quantity" ng-model="Order.Client.Address" placeholder="" required>
           </div>
           <div class="form-group">
             <label for="bgcolor"> التاريخ</label>
-            <input type="date" class="form-control" id="bgcolor" ng-model="Order.date" placeholder="">
+            <input type="date" class="form-control" id="bgcolor" ng-model="Order.date" placeholder="" required>
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
             <label for="item">الهاتف1</label>
-            <input type="text" class="form-control" id="tel1" ng-model="Order.Client.Tel1" placeholder="">
+            <input type="text" class="form-control" id="tel1" ng-model="Order.Client.Tel1" placeholder="" required>
           </div>
           <div class="form-group">
             <label for="item">الهاتف2</label>
-            <input type="text" class="form-control" id="tel2" ng-model="Order.Client.Tel2" placeholder="">
+            <input type="text" class="form-control" id="tel2" ng-model="Order.Client.Tel2" placeholder="" >
           </div>
           <div class="form-group">
             <label for="quantity">الفاكس</label>
-            <input type="text" class="form-control" id="quantity" ng-model="Order.Client.Fax" placeholder="">
+            <input type="text" class="form-control" id="quantity" ng-model="Order.Client.Fax" placeholder="" required>
           </div>
           <div class="form-group">
             <label for="bgcolor">البريد الالكتروني</label>
-            <input type="email" class="form-control" id="bgcolor" ng-model="Order.Client.Email" placeholder="">
+            <input type="email" class="form-control" id="bgcolor" ng-model="Order.Client.Email" placeholder="" required>
           </div>
         </div>
       </div>
@@ -202,7 +202,7 @@
         <div class="col-md-6">
           <div class="form-group">
             <label for="item">السعر</label>
-            <input type="text" class="form-control" id="item" ng-model="Order.TotalPrice" ng-init=0>
+            <input type="text" class="form-control" id="item" ng-model="Order.TotalPrice" ng-init=0 required>
           </div>
           <div class="form-group">
             <label for="quantity">عربون</label>

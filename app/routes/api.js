@@ -25,11 +25,11 @@ module.exports = function(router) {
   //http://localhost:3000/api/orders/
   //user Registration Route
   router.get('/orders/',function(req,res){
-        Orders.find({}).then(function (orders) {
-              res.json({success:true, orders:orders});
-        }).catch(err=>{
-          res.json({success:true,message:'erro with getting orders'});
-        });
+         Orders.find({}).sort({date:1}).then(function (orders) {
+            res.json({success:true, orders:orders});
+          }).catch(err=>{
+            res.json({success:false, message:'erro with getting orders'});
+          });
       });
 
   router.post('/orders/',function(req,res){

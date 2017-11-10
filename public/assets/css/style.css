@@ -28,7 +28,7 @@
 }
 
 .orders{
-  max-height: 450px;
+  max-height: 495px;
    overflow-y:scroll;
 
 }
@@ -40,8 +40,14 @@
   border-bottom-style:groove;
   margin-bottom: 12px;
   min-height: 115px;
-}
+  border-radius: 3px;
+  padding: 10px;
 
+
+}
+.order-data:hover{
+  background-color:rgba(51, 122, 183, 0.54);
+}
 .order-data .order-number{
 display: inline-block;
 font-size: 16px;
@@ -61,7 +67,6 @@ font-weight: bold;
 
 .order-data .order-item{
   margin-left: 0px;
-  max-width: 50px;
 }
 .order-data .order-total{
   font-size: 14px;
@@ -70,13 +75,14 @@ font-weight: bold;
 
 .item-table>tbody>tr>th, .item-table>tbody>tr>td
 ,.pricing-table>tbody>tr>th, .pricing-table>tbody>tr>td{
-      text-align: right;
-      border: 1;
+      text-align: right !important;
+      vertical-align: middle;
       padding: 3px;
-      min-width: 130px;
+      max-width: 130px;
 }
-
-
+th{
+  text-align: right !important;
+}
 .panel-heading .glyphicon{
   color:#337ab7;
   float: left;
@@ -118,4 +124,16 @@ font-weight: bold;
 
 .item-table {
   text-align: right;
+}
+
+.active{
+  background-color: rgba(60, 118, 61, 0.25);
+}
+.order-link,
+.order-link:hover,
+.order-link:active,
+.order-link:link,
+.order-link:focus{
+  text-decoration: none!important;
+  color: #000;
 }

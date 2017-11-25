@@ -147,6 +147,24 @@ var validate   = require('mongoose-validator');
       required:true,
       default:new Date().toJSON().split('T')[0]
     },
+    files:[{
+      fileName:{
+        type:String,
+        required:true
+      },
+      filePath:{
+        type:String,
+        required:false
+      },
+      fileSize:{
+        type:String,
+        required:false
+      },
+      fileMimetype:{
+        type:String,
+        required:false
+      }
+    }]
 });
 
 

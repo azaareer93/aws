@@ -238,12 +238,36 @@
     </div>
     <div class="col-md-3">
       <div class="well file-list">
-        <div class="empty">
+        <div class="empty" ng-if=!OrderList[index].files.length>
           <span class="glyphicon glyphicon-file"></span>
           <h4>الملفات</h4>
           <p>لم يتم تحميل اي ملف.</p>
         </div>
+        <div class="" ng-if=OrderList[index].files>
+          <table class="table item-table">
+            <tbody ng-repeat="file in OrderList[index].files track by $index">
+              <tr>
+               <th>#{{$index+1}}</th>
+               <td>{{file.fileName}}</td>
+               <td>
+                 <a href=../../../uploads/{{file.fileName}} target="_blank">link</a>
+               </td>
+
+             </tr>
+           </tbody>
+         </table>
+        </div>
+        <label class="btn btn-block btn-default btn-lg"
+               for="orderFile">
+               اختر ملف
+        </label>
+        <hr/>
+        <button class="btn btn-warning btn-block" ng-if='uploadButton' ng-click='uploadfile()'>
+            <i class="glyphicon glyphicon-upload"></i>
+            تحميل
+        </button>
       </div>
+      <input type="file" class="hidden" name="orderFile" id="orderFile" onchange="angular.element(this).scope().getFile()">
     </div>
 </div>
 

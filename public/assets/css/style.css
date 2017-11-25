@@ -98,11 +98,14 @@ th{
 
 .file-list{
   min-height: 450px;
-  padding:20% 30% 0 0;
-
 
 }
-.file-list .glyphicon{
+.empty{
+  padding:20% 30% 0 0;
+
+}
+
+.empty .glyphicon{
    font-size: 75px;
    color:#7b7b7b
 }
@@ -136,4 +139,21 @@ th{
 .order-link:focus{
   text-decoration: none!important;
   color: #000;
+}
+
+.top-static-bar {
+    position: sticky;
+    right: 0;
+    left: 0;
+    top: 0;
+    z-index: 200;
+}
+
+.hidden{
+  display: none;
+}
+
+td{
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

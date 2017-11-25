@@ -1,3 +1,17 @@
+<nav class="navbar navbar-default top-static-bar">
+  <div class="container-fluid">
+    <div class="col-sm-2">
+      <ul class="nav navbar-nav">
+            <li><a href="/">
+              الرئيسية
+              <i class="glyphicon glyphicon-circle-arrow-left"></i>
+            </a>
+            </li>
+          </ul>
+    </div>
+  </div><!-- /.container-fluid -->
+</nav>
+
 <div class="row new-order-form">
   <div class="col-md-2"></div>
   <div class="col-md-8 well">
@@ -46,70 +60,143 @@
       </div>
       <hr/>
       <div class="row">
-        <div class="col-md-2">
-          <button class="btn btn-sm btn-success"
-             data-toggle="modal" data-target="#itemModal">اضف  عينة</button>
-        </div>
-      </div>
-      <br/>
-      <div class="row">
-        <div class="col-md-12">
-          <table class="table table-bordered" >
-            <thead>
-              <tr>
-                <th>العينة</th>
-                <th>الكمية</th>
-                <th>لون الارضية</th>
-                <th> لون الطباعة</th>
-                <th>معلومات اضافية</th>
-                <th>الحجم1</th>
-                <th>الحجم2</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-if='Order.Items.length>0' ng-repeat="item in Order.Items track by $index">
-                <td>{{item.Name}}</td>
-                <td>{{item.Quantity}}</td>
-                <td>{{item.GColor}}</td>
-                <td>{{item.PColor}}</td>
-                <td>{{item.Note}}</td>
-                <td>{{item.Size}}</td>
-                <td>{{item.PainOnChest}}</td>
-                <td>{{item.PainOnBack}}</td>
-              </tr>
-              <tr ng-if='Order.Items.length<=0'>
-                <td colspan="7">
-                  لم يتم اضافة عناصر
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <hr/>
-      <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-8">
           <div class="form-group">
-            <label for="item">السعر</label>
-            <input type="text"class="form-control input-sm" id="item" ng-model="Order.TotalPrice" ng-init=0  >
+            <label for="price" class="col-sm-1 col-xs-2 control-label pull-left">السعر</label>
+            <div class="col-sm-6 pull-left">
+              <input type="text"class="form-control input-sm" id="price" ng-model="Order.TotalPrice" ng-init=0  >
+            </div>
           </div>
           <div class="form-group">
-            <label for="quantity">عربون</label>
-            <input type="text"class="form-control input-sm" id="quantity" ng-model="Order.Payment.Ammount" ng-init=0>
+            <label for="first" class="col-sm-1 col-xs-2 control-label pull-left">عربون</label>
+            <div class="col-sm-6 pull-left">
+              <input type="text"class="form-control input-sm" id="first" ng-model="Order.Payment.Ammount" ng-init=0>
+            </div>
           </div>
           <div class="form-group">
-            <label for="bgcolor">الباقي </label>
-            <input type="text"class="form-control input-sm" id="bgcolor" ng-value=Order.TotalPrice-Order.Payment.Ammount disabled>
+            <label for="remain"  class="col-sm-1 col-xs-2 control-label pull-left">الباقي </label>
+            <div class="col-sm-6 pull-left">
+              <input type="text"class="form-control input-sm" id="remain" ng-value=Order.TotalPrice-Order.Payment.Ammount disabled>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-3">
-          <button type="submit" class="btn btn-success btn-block" ng-click=saveOrder(order)>حفظ</button>
         </div>
       </div>
     </form>
+    <hr/>
+    <div class="row">
+      <div class="col-md-12">
+        <table class="table table-bordered" >
+          <thead>
+            <tr>
+              <th>العينة</th>
+              <th>الكمية</th>
+              <th>لون الارضية</th>
+              <th>لون الطباعة</th>
+              <th>معلومات اضافية</th>
+              <th>الحجم</th>
+              <th>الطباعة على الظهر</th>
+              <th>الطباعة على الوجه</th>
+              <th>الحجم1</th>
+              <th>الحجم2</th>
+              <th>حذف</th>
 
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-if='Order.Items.length>0' ng-repeat="item in Order.Items track by $index">
+              <td>{{item.Name}}</td>
+              <td>{{item.Quantity}}</td>
+              <td>{{item.GColor}}</td>
+              <td>{{item.PColor}}</td>
+              <td>{{item.Note}}</td>
+              <td>{{item.Size}}</td>
+              <td>{{item.PrintOnChest}}</td>
+              <td>{{item.PrintOnBack}}</td>
+              <td>
+                <table  class="table table-bordered" dir="ltr">
+                  <tr>
+                    <th>s</th>
+                    <td>{{item.s}}</td>
+                  </tr>
+                  <tr>
+                    <th>m</th>
+                    <td>{{item.m}}</td>
+                  </tr>
+                  <tr>
+                    <th>l</th>
+                    <td>{{item.l}}</td>
+                  </tr>
+                  <tr>
+                    <th>xl</th>
+                    <td>{{item.xl}}</td>
+                  </tr>
+                  <tr>
+                    <th>xxl</th>
+                    <td>{{item.xxl}}</td>
+                  </tr>
+                  <tr>
+                    <th>xxxl</th>
+                    <td>{{item.xxxl}}</td>
+                  </tr>
+                </table>
+              </td>
+              <td>
+                <table  class="table table-bordered" dir="ltr">
+                  <tr>
+                    <th>6</th>
+                    <td>{{item['6']}}</td>
+                  </tr>
+                  <tr>
+                    <th>8</th>
+                    <td>{{item['8']}}</td>
+                  </tr>
+                  <tr>
+                    <th>10</th>
+                    <td>{{item['10']}}</td>
+                  </tr>
+                  <tr>
+                    <th>12</th>
+                    <td>{{item['12']}}</td>
+                  </tr>
+                  <tr>
+                    <th>14</th>
+                    <td>{{item['14']}}</td>
+                  </tr>
+                  <tr>
+                    <th>16</th>
+                    <td>{{item['16']}}</td>
+                  </tr>
+                  <tr>
+                    <th>18</th>
+                    <td>{{item['18']}}</td>
+                  </tr>
+                </table>
+              </td>
+              <td>
+                <button class="btn btn-danger" ng-click=deleteItem($index)>
+                <i class="glyphicon glyphicon-trash"></i></button>
+              </td>
+            </tr>
+            <tr ng-if='Order.Items.length<=0'>
+              <td colspan="11">
+                لم يتم اضافة عناصر
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <button class="btn btn-sm btn-success"
+                   data-toggle="modal" data-target="#itemModal">اضف  عينة</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <button type="submit" class="btn btn-success btn-block" ng-click=saveOrder(order)>حفظ</button>
+      </div>
+    </div>
   </div>
   <div class="col-md-2">
   </div>
@@ -175,37 +262,37 @@
           <div class="col-md-2">
             <div class="form-group">
               <label for="pcolor">S</label>
-              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['s']" placeholder="">
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['s']" ng-init="item['s']=0" placeholder="">
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
               <label for="pcolor">M</label>
-              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['m']" placeholder="">
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['m']" ng-init="item['m']=0" placeholder="">
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
               <label for="pcolor">L</label>
-              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['l']" placeholder="">
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['l']" ng-init="item['l']=0" placeholder="">
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
               <label for="pcolor">XL</label>
-              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['xl']" placeholder="">
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['xl']" ng-init="item['xl']=0" placeholder="">
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
               <label for="pcolor">XXL</label>
-              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['xxl']" placeholder="">
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['xxl']" ng-init="item['xxl']=0" placeholder="">
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
               <label for="pcolor">XXL</label>
-              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['xxxl']" placeholder="">
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['xxxl']" ng-init="item['xxxl']=0" placeholder="">
             </div>
           </div>
         </div>
@@ -213,44 +300,50 @@
         <div class="row">
           <div class="col-md-2">
             <div class="form-group">
+              <label for="pcolor">4</label>
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['4']" ng-init="item['4']=0" placeholder="">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
               <label for="pcolor">6</label>
-              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['6']" placeholder="">
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['6']" ng-init="item['6']=0" placeholder="">
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
               <label for="pcolor">8</label>
-              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['8']" placeholder="">
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['8']" ng-init="item['8']=0" placeholder="">
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
               <label for="pcolor">10</label>
-              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['10']" placeholder="">
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['10']" ng-init="item['10']=0" placeholder="">
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
               <label for="pcolor">12</label>
-              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['12']" placeholder="">
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['12']" ng-init="item['12']=0" placeholder="">
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
               <label for="pcolor">14</label>
-              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['14']" placeholder="">
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['14']" ng-init="item['14']=0" placeholder="">
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
               <label for="pcolor">16</label>
-              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['16']" placeholder="">
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['16']" ng-init="item['16']=0" placeholder="">
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
               <label for="pcolor">18</label>
-              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['18']" placeholder="">
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['18']" ng-init="item['18']=0" placeholder="">
             </div>
           </div>
         </div>

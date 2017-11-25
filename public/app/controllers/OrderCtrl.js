@@ -1,5 +1,5 @@
 angular.module('OrderController', ['AuthServices', 'queryService'])
-  .controller('OrderCtrl', function($scope, Auth, qService) {
+  .controller('OrderCtrl', function($scope, $location,Auth, qService, toastr) {
     $scope.Order = {}
     $scope.Order.Items=[]
     $scope.addItem = function (item) {
@@ -10,15 +10,19 @@ angular.module('OrderController', ['AuthServices', 'queryService'])
 
     $scope.saveOrder = function(order) {
       order = $scope.Order
-      console.log(order);
       qService.query('POST', "/api/orders/", order).then(function(data) {
         if (data.data.success) {
-          console.log(data.data.message);
+          toastr.success(data.data.message);
+          console.log(data.data);
+            $location.path('/');
         }
-        console.log(data.data.message);
-
+        else {
+          console.log(data.data);
+          toastr.error(data.data.message);
+        }
       }).catch(function(err) {
-        console.log(err);
+        console.log(data.data);
+        toastr.error(data.data.message);
       });
    }
 

@@ -1,7 +1,7 @@
 var multer = require('multer');
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './public/uploads/imgs');
+    cb(null, './public/uploads/');
   },
   filename: function (req, file, cb) {
     if (!file.originalname.match(/\.(jpeg|jpg|png|gif)$/)) {
@@ -14,7 +14,7 @@ var storage = multer.diskStorage({
   }
 });
 
-var upload = multer({ storage: storage }).single('RestImg');
+var upload = multer({ storage: storage }).single('orderFile');
 
 module.exports={
   'storage':storage,

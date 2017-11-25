@@ -34,7 +34,7 @@ module.exports = function(router) {
 
   router.post('/orders/',function(req,res){
         var order = new Orders(req.body);
-        order.save().then(function (err,order) {
+        order.save().then(function (order, err) {
           if (err) {
             res.json({success:false, message:err});
           }else {
@@ -43,6 +43,35 @@ module.exports = function(router) {
 
         })
     });
+
+    router.put('/orders/files/',function(req,res){
+      config.upload(req, res, function (err) {
+         if (err) {
+            if (err.code ==='filetype') {
+              res.json({success:false, err:err, message:"only image files are Accepted"});
+            } else {
+              console.log(err);
+              res.json({success:false, err:err, message:"file was not uploaded"});
+            }
+         }else{
+           var id = req.body.orderId;
+            Orders.findOneAndUpdate({_id:id},{$push:{files:{fileName:req.file.filename,
+              filePath:req.file.path,
+              fileSize:req.file.size,
+              fileMimetype:req.file.mimetype}}}).then(function(order) {
+              res.json({success:true, order:order, message:"file was uploaded"});
+            }).catch(function (err) {
+              res.json({success:false , err:err});
+            });
+            // if(req.file){
+            //    Rest.RestImg=req.file.filename;
+            // }else {
+            //   Rest.RestImg = "default.jpg";
+            // }
+           }
+       });
+      });
+
 //
 //   router.post('/checkuser',function(req,res){
 //     var userToCheck={

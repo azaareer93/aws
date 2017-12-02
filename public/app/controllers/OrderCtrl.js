@@ -2,10 +2,15 @@ angular.module('OrderController', ['AuthServices', 'queryService'])
   .controller('OrderCtrl', function($scope, $location,Auth, qService, toastr) {
     $scope.Order = {}
     $scope.Order.Items=[]
+
     $scope.addItem = function (item) {
-      console.log(item);
       $scope.Order.Items.push(item)
       $scope.item = null
+    }
+
+    $scope.deleteItem= function (itemIndex) {
+      console.log(itemIndex);
+      $scope.Order.Items.splice(itemIndex,1);
     }
 
     $scope.saveOrder = function(order) {

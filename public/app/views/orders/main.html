@@ -93,7 +93,7 @@
          <div class="panel panel-default">
            <div class="panel-heading">
             <strong>  معلومات الزبون </strong>
-           <a href=""> <span class="glyphicon glyphicon-edit"></span> </a>
+           <a href="" > <span class="glyphicon glyphicon-edit"  data-toggle="modal" data-target="#ClientModal"></span> </a>
           </div>
            <div class="panel-body">
              <table class="table item-table">
@@ -260,14 +260,16 @@
         <label class="btn btn-block btn-default btn-lg"
                for="orderFile">
                اختر ملف
+
         </label>
         <hr/>
+
         <button class="btn btn-warning btn-block" ng-if='uploadButton' ng-click='uploadfile()'>
             <i class="glyphicon glyphicon-upload"></i>
             تحميل
         </button>
       </div>
-      <input type="file" class="hidden" name="orderFile" id="orderFile" onchange="angular.element(this).scope().getFile()">
+      <input type="file" class="hidden" name="orderFile" id="orderFile" onchange="angular.element(this).scope().fileChaned()">
     </div>
 </div>
 
@@ -357,6 +359,70 @@
             </tr>
           </tbody>
         </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- item modal -->
+<div class="modal fade" id="ClientModal" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">الزيون</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal">
+        <div class="form-group">
+          <label for="item" class="col-sm-1 col-xs-2 control-label pull-left">الاسم:</label>
+          <div class="col-sm-8 pull-left">
+            <input type="text" class="form-control input-sm" id="item" ng-model="Order.Client.Name" placeholder=""  >
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="address" class="col-sm-1 col-xs-2 control-label pull-left">العنوان:</label>
+          <div class="col-sm-8 pull-left">
+            <input type="text" class="form-control input-sm" id="address" ng-model="Order.Client.Address" placeholder=""  >
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="date" class="col-sm-1 col-xs-2 control-label pull-left"> التاريخ:</label>
+          <div class="col-sm-8 pull-left">
+            <input type="date" class="form-control input-sm" id="date" ng-model="Order.date" placeholder=""  >
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="tel1" class="col-sm-1 col-xs-2 control-label pull-left">الهاتف1:</label>
+          <div class="col-sm-8 pull-left">
+            <input type="text" class="form-control input-sm" id="tel1" ng-model="Order.Client.Tel1" placeholder=""  >
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="tel2" class="col-sm-1 col-xs-2 control-label pull-left">الهاتف2:</label>
+          <div class="col-sm-8 pull-left">
+            <input type="text" class="form-control input-sm" id="tel2" ng-model="Order.Client.Tel2" placeholder=""  >
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="fax" class="col-sm-1 col-xs-2 control-label pull-left">الفاكس:</label>
+          <div class="col-sm-8 pull-left">
+            <input type="text" class="form-control input-sm" id="fax" ng-model="Order.Client.Fax" placeholder=""  >
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email" class="col-sm-1 col-xs-2 control-label pull-left">البريد الالكتروني:</label>
+          <div class="col-sm-8 pull-left">
+            <input type="email" class="form-control input-sm" id="email" ng-model="Order.Client.Email" placeholder=""  >
+          </div>
+        </div>
+      </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -19,8 +19,8 @@ var validate   = require('mongoose-validator');
       }
     }],
     Status:{
-      type:String,
-      default:null
+      type:Number,
+      default:1
     },
     Note:{
       type:String,

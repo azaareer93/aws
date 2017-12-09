@@ -17,16 +17,18 @@
     <ul class="nav navbar-nav">
       <li ><a href="#"><span class="glyphicon glyphicon-menu-hamburger"></span>
       <li ><a href="#"><span class="glyphicon glyphicon-sort-by-attributes"></span>
-      <li ><a href="/new"><span class="glyphicon glyphicon-plus"></span>
+      <li ><a href="/new" ><span class="glyphicon glyphicon-plus"></span>
+      </a></li>
+      <li ><a href="" ng-click="Logout()"><span class="glyphicon glyphicon-off"></span>
       </a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
       <li>
         <label for="order-status">  وضع الطلب:</label>
           <div class="btn-group btn-group-sm order-status" id="order-status">
-            <button type="button" class="btn btn-primary">لم يبدأ</button>
-            <button type="button" class="btn btn-primary">تحت التنفيذ</button>
-            <button type="button" class="btn btn-primary">مكتمل</button>
+            <button type="button" class="btn btn-primary" ng-class="{true: 'btn-danger'}[selectedOrder.Status == 1 || selectedOrder.Status == null]">لم يبدأ</button>
+            <button type="button" class="btn btn-primary" ng-class="{true: 'btn-danger'}[selectedOrder.Status == 2]">تحت التنفيذ</button>
+            <button type="button" class="btn btn-primary" ng-class="{true: 'btn-danger'}[selectedOrder.Status == 3]">مكتمل</button>
           </div>
       </li>
       <li class="empty-li"> </li>
@@ -42,6 +44,13 @@
         <a>
           <b> رقم الطلب: #{{index+1}}
           <sub>10/6/2017</sub>
+        </b>
+        </a>
+      </li>
+      <li>
+        <a>
+          <b>المستخدم
+          <sub>{{UserName}}</sub>
         </b>
         </a>
       </li>

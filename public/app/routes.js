@@ -15,7 +15,10 @@ var app = angular.module('appRoute',['ngRoute'])
             templateUrl:'app/views/orders/new.html',
             controller: 'OrderCtrl'
             })
-
-       .otherwise({redirectTo:'/'});
+      .when('/login',{
+            templateUrl:'app/views/users/login.html',
+            controller: 'MainCtrl'
+            })
+      .otherwise({redirectTo:'/'});
 
 });

@@ -1,0 +1,46 @@
+
+<div class="container login-body">
+    	<div class="row">
+        <div class="col-md-3 "></div>
+			<div class="col-md-6">
+				<div class="panel panel-login">
+					<div class="panel-heading">
+              <h2> تسجيل الدخول </h2>
+						<hr>
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-lg-10 col-sm-10 col-xs-10 pull-left" >
+								<form id="login-form" role="form" style="display: block;" ng-submit="doLogin(LoginData)">
+									<div class="form-group">
+										<input type="text" name="UserName" id="UserName" tabindex="1" class="form-control" placeholder="اسم المستخدم" ng-model="LoginData.UserName">
+									</div>
+									<div class="form-group">
+										<input type="password" name="Password" id="Password" tabindex="2" class="form-control" placeholder="كلمة المرور" ng-model="LoginData.Password">
+									</div>
+
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-6 col-sm-offset-2 col-xs-6 col-xs-offset-2">
+												<input type="submit" name="login-submit" id="login-submit" tabindex="3" class="form-control btn btn-login" value="دخول">
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+
+
+
+				</div>
+        <div class="row show-hide-messege">
+          <div class="col-md-12">
+          <div class="alert alert-success" ng-show="main.successMsg">{{main.successMsg}}</div>
+          <div class="alert alert-danger" ng-show="main.errorMsg">{{main.errorMsg}}</div>
+          </div>
+        </div>
+			</div>
+
+		</div>
+	</div>

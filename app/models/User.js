@@ -1,11 +1,11 @@
-// var mongoose   = require('mongoose');
-// var Schema     = mongoose.Schema;
-// var bcrypt     = require('bcrypt-nodejs');
-// var titlize    = require('mongoose-title-case');
-// var validate   = require('mongoose-validator');
-// var Promise          = require('mpromise');
-// mongoose.Promise=Promise;
-//
+var mongoose   = require('mongoose');
+var Schema     = mongoose.Schema;
+var bcrypt     = require('bcrypt-nodejs');
+var titlize    = require('mongoose-title-case');
+var validate   = require('mongoose-validator');
+var Promise          = require('mpromise');
+mongoose.Promise=Promise;
+
 // // User Name Validator
 // var nameValidator = [
 //     validate({
@@ -39,19 +39,19 @@
 // ];
 //
 // // Username Validator
-// var usernameValidator = [
-//     validate({
-//         isAsync: true,
-//         validator: 'isLength',
-//         arguments: [3, 25],
-//         message: 'Username should be between {ARGS[0]} and {ARGS[1]} characters'
-//     }),
-//     validate({
-//         isAsync: true,
-//         validator: 'isAlphanumeric',
-//         message: 'Username must contain letters and numbers only'
-//     })
-// ];
+var usernameValidator = [
+    validate({
+        isAsync: true,
+        validator: 'isLength',
+        arguments: [3, 25],
+        message: 'Username should be between {ARGS[0]} and {ARGS[1]} characters'
+    }),
+    validate({
+        isAsync: true,
+        validator: 'isAlphanumeric',
+        message: 'Username must contain letters and numbers only'
+    })
+];
 //
 // // Password Validator
 // var passwordValidator = [
@@ -68,35 +68,33 @@
 //         message: 'Password should be between {ARGS[0]} and {ARGS[1]} characters'
 //     })
 // ];
-//
-//
-//
-// var UserSchema = new Schema({
-//   UserName:{ type:String, lowercase:true, required:true, unique:true,validate: usernameValidator},
-//   FullName:{ type:String, required:true, validate: nameValidator},
-//   Password:{ type:String, required:true, validate: passwordValidator},
-//   Email:{type:String, required:true, unique:true, lowercase:true, validate: emailValidator},
-//   Approved:{type:Boolean, required:true, default:true},
-//   Permission:{ type:String, required:true, default:'User'},
-//
-//
-//
-//   });
-// UserSchema.pre('save', function(next) {
-//   var user = this;
-//   bcrypt.hash(user.Password, null, null, function(err, hash){
-//     user.Password=hash;
-//     next();
-//     });
-//
-// });
-//
+
+
+
+var UserSchema = new Schema({
+  UserName:{ type:String, lowercase:true, required:true, unique:true,validate: usernameValidator},
+  Password:{ type:String, required:true},
+  Approved:{type:Boolean, required:true, default:true},
+  Role:{ type:String, required:true, default:'ADMIN'},
+
+
+
+  });
+UserSchema.pre('save', function(next) {
+  var user = this;
+  bcrypt.hash(user.Password, null, null, function(err, hash){
+    user.Password=hash;
+    next();
+    });
+
+});
+
 // UserSchema.plugin(titlize, {
 //   paths: [ 'FullName']
 // });
-//
-// UserSchema.methods.comparePassword = function (Password) {
-//   return bcrypt.compareSync(Password, this.Password);
-// };
-//
-// module.exports=mongoose.model('User',UserSchema);
+
+UserSchema.methods.comparePassword = function (Password) {
+  return bcrypt.compareSync(Password, this.Password);
+};
+
+module.exports=mongoose.model('User',UserSchema);

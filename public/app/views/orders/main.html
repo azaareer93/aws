@@ -1,4 +1,5 @@
-<nav class="navbar navbar-default">
+<div ng-show="loadme" ng-cloak>
+  <nav class="navbar navbar-default">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
@@ -55,7 +56,7 @@
       <div class="orders well" >
         <div class="order-data"
          ng-class="{true: 'active'}[$index ==  index]"
-          ng-repeat="Order in OrderList | orderBy:'date'">
+          ng-repeat="Order in OrderList | orderBy:'date'" ng-cloak>
           <div class="order-link" ng-click=selectOrder($index)>
             <div class="order-number"> رقم الطلب: {{$index+1}} </div>
             <small class="order-date">{{Order.date | date : 'EEE, d/MMM/y'}}</small>
@@ -238,14 +239,14 @@
     </div>
     <div class="col-md-3">
       <div class="well file-list">
-        <div class="empty" ng-if=!OrderList[index].files.length>
+        <div class="empty" ng-if=!OrderList[index].files.length ng-cloak>
           <span class="glyphicon glyphicon-file"></span>
           <h4>الملفات</h4>
           <p>لم يتم تحميل اي ملف.</p>
         </div>
         <div class="" ng-if=OrderList[index].files>
           <table class="table item-table">
-            <tbody ng-repeat="file in OrderList[index].files track by $index">
+            <tbody ng-repeat="file in OrderList[index].files track by $index" ng-cloak>
               <tr>
                <th>#{{$index+1}}</th>
                <td>{{file.fileName}}</td>
@@ -257,18 +258,18 @@
            </tbody>
          </table>
         </div>
-        <label class="btn btn-block btn-default btn-lg"
-               for="orderFile">
-               اختر ملف
-
-        </label>
-        <hr/>
-
-        <button class="btn btn-warning btn-block" ng-if='uploadButton' ng-click='uploadfile()'>
-            <i class="glyphicon glyphicon-upload"></i>
-            تحميل
-        </button>
       </div>
+      <label class="btn btn-block btn-default btn-lg"
+             for="orderFile">
+             اختر ملف
+
+      </label>
+      <hr/>
+
+      <button class="btn btn-warning btn-block" ng-if='uploadButton' ng-click='uploadfile()'>
+          <i class="glyphicon glyphicon-upload"></i>
+          تحميل
+      </button>
       <input type="file" class="hidden" name="orderFile" id="orderFile" onchange="angular.element(this).scope().fileChaned()">
     </div>
 </div>
@@ -430,4 +431,5 @@
     </div>
 
   </div>
+</div>
 </div>

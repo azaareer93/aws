@@ -97,9 +97,10 @@ th{
 }
 
 .file-list{
-  min-height: 450px;
-
+  max-height: 430px;
+  overflow-y:scroll;
 }
+
 .empty{
   padding:20% 30% 0 0;
 

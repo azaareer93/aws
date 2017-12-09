@@ -24,6 +24,18 @@ var date = new Date().toJSON().split('T')[0];
 module.exports = function(router) {
   //http://localhost:3000/api/orders/
   //user Registration Route
+  router.post('/users',function(req,res){
+        console.log(req.body);
+        var user = new User(req.body);
+        user.save().then(function (doc) {
+              res.json({success:true, message:'User registred successfully.'});
+        }).catch(err=>{
+          console.log(err);
+          res.json({success:false,message:'User was not registred'});
+
+        });
+});
+
   router.get('/orders/',function(req,res){
          Orders.find({}).sort({date:1}).then(function (orders) {
             res.json({success:true, orders:orders});
@@ -96,100 +108,63 @@ module.exports = function(router) {
 //   });
 //
 //
-//   //user Login Route
-//   // http://localhost:3000/api/authenticate
-//
-//   router.post('/authenticate',function(req,res){
-//
-//     //here th check our local costmers
-//      var localCostmerStatus=false;
-//
-//      User.findOne({UserName:req.body.UserName}).then(function(user){
-//
-//        flage=false;
-//        message="Invalid username";
-//        token = {};
-//
-//      if(user){
-//        if (req.body.Password) {
-//            var ValidPassword = user.comparePassword(req.body.Password);
-//            if(ValidPassword){
-//              var token = jwt.sign({UserName:user.UserName, Email:user.Email, Permission:user.Permission}, secret, { expiresIn: '24h' });
-//                 localCostmerStatus =true;
-//                 flage=true;
-//                 message="user authenticated";
-//                 userNameAuthenticated = user.UserName ;
-//                res.json({success:flage, message:message, token:token});
-//              }else {
-//                flage=false;
-//                message="invalid password";
-//                 res.json({success:flage, message:message});
-//              }
-//            }else {
-//              flage=false;
-//              message="Password was not provided";
-//               res.json({success:flage, message:message});
-//            }
-//          }else {
-//            if(!localCostmerStatus){
-//                    //here to check the asal users
-//                    var url = 'http://172.22.1.26/orgstructure/UsersService.asmx?WSDL';
-//                    var args = {userName: req.body.UserName , password:req.body.Password };
-//
-//                    soap.createClient(url, function(err, client) {
-//
-//                             // console.log(client);
-//
-//                          client.AuthinticationStatus(args, function(err, result){
-//
-//                            if(result.AuthinticationStatusResult ){
-//                             //  console.log(args.userName);
-//                              var token = jwt.sign({UserName:args.userName.toLowerCase(), Permission:'User'}, secret, { expiresIn: '24h' });
-//                              flage=true;
-//                              message="user authenticated";
-//                              res.json({success:flage, message:message, token:token });
-//
-//                            }
-//                            else{
-//                              flage=false;
-//                              message="user or password is not valid";
-//                                res.json({success:flage, message:message});
-//                            }
-//                        });
-//                    });
-//
-//            }
-//          }
-//      });
-//
-//
-//
-//
-//   });
-//
-// //verfiy token
-// router.use(function (req,res,next) {
-// var token = req.body.token || req.body.query || req.headers['x-access-token'];
-//     if (token) {
-//         jwt.verify(token,secret,function (err,decoded) {
-//             if(err){
-//                 res.json({success:false, message:"invalid or expired token"});
-//             } else {
-//               req.decoded = decoded;
-//
-//               next();
-//             }
-//         });
-//     } else {
-//       res.json({success:false, message:"No token provided"});
-//     }
-// });
-//
-// //current user route
-//   router.post('/me',function (req,res) {
-//     res.send(req.decoded);
-//   });
-//
+  //user Login Route
+  // http://localhost:3000/api/authenticate
+
+  router.post('/authenticate',function(req,res){
+    //here th check our local costmers
+     User.findOne({UserName:req.body.UserName}).then(function(user){
+       flage=false;
+       message="Invalid username";
+       token = {};
+     if(user){
+       if (req.body.Password) {
+           var ValidPassword = user.comparePassword(req.body.Password);
+           if(ValidPassword){
+             var token = jwt.sign({UserName:user.UserName, Email:user.Email, Permission:user.Permission}, secret, { expiresIn: '24h' });
+                flage=true;
+                message="user authenticated";
+                userNameAuthenticated = user.UserName ;
+               res.json({success:flage, message:message, token:token});
+             }else {
+               flage=false;
+               message="invalid password";
+                res.json({success:flage, message:message});
+             }
+           }else {
+             flage=false;
+             message="Password was not provided";
+              res.json({success:flage, message:message});
+           }
+         }
+         res.json({success:flage, message:message});
+     });
+  });
+
+
+//verfiy token
+router.use(function (req,res,next) {
+var token = req.body.token || req.body.query || req.headers['x-access-token'];
+    if (token) {
+        jwt.verify(token,secret,function (err,decoded) {
+            if(err){
+                res.json({success:false, message:"invalid or expired token"});
+            } else {
+              req.decoded = decoded;
+
+              next();
+            }
+        });
+    } else {
+      res.json({success:false, message:"No token provided"});
+    }
+});
+
+//current user route
+  router.post('/me',function (req,res) {
+    res.send(req.decoded);
+  });
+
 //   router.get('/notifications',function (req,res) {
 //     // Notifications.find({username: req.decoded.UserName, read:false},{"sort" : [['time', 'desc']]},function(err,doc) {
 //     //   if(err) {

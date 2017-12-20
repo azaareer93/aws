@@ -17,7 +17,8 @@ var app = angular.module('appRoute',['ngRoute'])
             })
       .when('/login',{
             templateUrl:'app/views/users/login.html',
-            controller: 'MainCtrl'
+            controller: 'MainCtrl',
+            isLoggedIn: true
             })
       .otherwise({redirectTo:'/'});
 

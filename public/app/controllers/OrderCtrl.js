@@ -3,6 +3,25 @@ angular.module('OrderController', ['AuthServices', 'queryService'])
     $scope.Order = {}
     $scope.Order.Items=[]
 
+    if (Auth.isLoggedIn()) {
+      // Check if a the token expired
+      Auth.getUser().then(function(data) {
+        // Check if the returned user is undefined (expired)
+        if (data.data.UserName === undefined) {
+          Auth.Logout(); // Log the user out
+          $scope.isLoggedIn = false; // Set session to false
+          $location.path('/'); // Redirect to home page
+          $scope.loadme = true; // Allow loading of page
+        }
+        $scope.getOrders();
+        $scope.loadme = true;
+        $scope.UserName = data.data.UserName;
+      });
+    }else {
+      $location.path('/login'); // Redirect to home page
+    }
+    
+
     $scope.addItem = function (item) {
       $scope.Order.Items.push(item)
       $scope.item = null

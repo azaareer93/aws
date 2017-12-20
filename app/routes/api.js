@@ -56,6 +56,17 @@ module.exports = function(router) {
         })
     });
 
+    router.put('/orders/status/',function(req,res){
+      var id = req.body.orderId;
+      var status = req.body.Status;
+       Orders.findOneAndUpdate({_id:id},{$set:{Status:status}}).then(function(order) {
+         res.json({success:true, order:order, message:"status was updated"});
+       }).catch(function (err) {
+         res.json({success:false , err:err});
+       });
+
+      });
+
     router.put('/orders/files/',function(req,res){
       config.upload(req, res, function (err) {
          if (err) {
@@ -75,11 +86,6 @@ module.exports = function(router) {
             }).catch(function (err) {
               res.json({success:false , err:err});
             });
-            // if(req.file){
-            //    Rest.RestImg=req.file.filename;
-            // }else {
-            //   Rest.RestImg = "default.jpg";
-            // }
            }
        });
       });

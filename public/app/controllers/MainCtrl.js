@@ -27,6 +27,8 @@ angular.module('MainController', ['AuthServices', 'queryService'])
           if (res.data.success) {
             $scope.OrderList = res.data.orders;
             $scope.selectedOrder = $scope.OrderList[$scope.index]
+            $scope.CalculatePayments();
+            $scope.OrderPaymentStatus();
           } else {
             $scope.orderList  = null;
           }
@@ -37,7 +39,8 @@ angular.module('MainController', ['AuthServices', 'queryService'])
 
       $scope.selectOrder = function (orderIndex){
         $scope.index = orderIndex;
-        $scope.selectedOrder = $scope.OrderList[orderIndex]
+        $scope.selectedOrder = $scope.OrderList[orderIndex];
+        $scope.CalculatePayments();
       }
 
       $scope.viewItem = function (item) {
@@ -108,6 +111,47 @@ angular.module('MainController', ['AuthServices', 'queryService'])
         $location.path('/login');
       };
 
+      $scope.ChangeOrderStatus = function (Status) {
+      data = {
+        "orderId":$scope.OrderList[$scope.index]._id,
+        "Status": Status
+      }
+      qService.query('PUT','/api/orders/status/',data,null).then(function(data){
+      if(!data.data.success){
+        toastr.error(data.data.message);
+        }else {
+          toastr.success(data.data.message);
+          $scope.OrderList[$scope.index].Status = Status
+          }
+      }).catch(function(err) {
+      console.log(err);
+    });
+      }
+
+    $scope.CalculatePayments = function() {
+      for(var i = 0; i < $scope.OrderList.length; i++){
+        var total = 0;
+        for(var j = 0; j < $scope.OrderList[i].Payments.length; j++){
+            var payment =  $scope.OrderList[i].Payments[j].Ammount;
+            total += payment;
+        }
+          $scope.OrderList[i].TotalPayments = total;
+          $scope.OrderList[i].Remaning =  $scope.OrderList[i].TotalPrice - total;
+      }
+    }
+
+    $scope.OrderPaymentStatus = function () {
+      for(var i = 0; i < $scope.OrderList.length; i++){
+        $scope.OrderList[i].OrderPaymentStatus = null;
+        if($scope.OrderList[i].Remaning == 0){
+          $scope.OrderList[i].OrderPaymentStatus = 3
+        }else if ($scope.OrderList[i].Remaning == $scope.OrderList[i].TotalPrice) {
+          $scope.OrderList[i].OrderPaymentStatus = 1
+        }else {
+          $scope.OrderList[i].OrderPaymentStatus = 2
+        }
+      }
+    }
       $scope.checkSession = function() {
         // Only run check if user is logged in
         if (Auth.isLoggedIn()) {
@@ -137,11 +181,11 @@ angular.module('MainController', ['AuthServices', 'queryService'])
               } else {
                 // console.log("session NOT expired yet");
               }
-
             }
           }, 30000);
         }
       };
+
       $scope.checkSession();
           // Will run code every time a route changes
           $scope.$on('$routeChangeStart', function(event, next, current) {
@@ -153,6 +197,7 @@ angular.module('MainController', ['AuthServices', 'queryService'])
                 $scope.UserName = data.data.UserName;
                 //console.log("mian ",data.data);
                 $scope.loadme = true;
+                console.log($scope.isLoggedIn);
                 if (next.$$route) {
                   if (next.$$route.originalPath == '/') {
                     $location.path('/');

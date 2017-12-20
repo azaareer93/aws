@@ -26,24 +26,24 @@
       <li>
         <label for="order-status">  وضع الطلب:</label>
           <div class="btn-group btn-group-sm order-status" id="order-status">
-            <button type="button" class="btn btn-primary" ng-class="{true: 'btn-danger'}[selectedOrder.Status == 1 || selectedOrder.Status == null]">لم يبدأ</button>
-            <button type="button" class="btn btn-primary" ng-class="{true: 'btn-danger'}[selectedOrder.Status == 2]">تحت التنفيذ</button>
-            <button type="button" class="btn btn-primary" ng-class="{true: 'btn-danger'}[selectedOrder.Status == 3]">مكتمل</button>
+            <button type="button" class="btn btn-primary" ng-click="ChangeOrderStatus(1)" ng-class="{true: 'btn-danger'}[selectedOrder.Status == 1 || selectedOrder.Status == null]">لم يبدأ</button>
+            <button type="button" class="btn btn-primary" ng-click="ChangeOrderStatus(2)" ng-class="{true: 'btn-warning'}[selectedOrder.Status == 2]">تحت التنفيذ</button>
+            <button type="button" class="btn btn-primary"  ng-click="ChangeOrderStatus(3)" ng-class="{true: 'btn-success'}[selectedOrder.Status == 3]">مكتمل</button>
           </div>
       </li>
       <li class="empty-li"> </li>
       <li>
         <label for="payment-status">وضع الدفع</label>
         <div class="btn-group btn-group-sm payment-status" id="order-status">
-          <button type="button" class="btn btn-primary"> غير مدفوع</button>
-          <button type="button" class="btn btn-primary"> جزئي</button>
-          <button type="button" class="btn btn-primary">كلي</button>
+          <button type="button" class="btn btn-primary" ng-class="{true: 'btn-danger'}[selectedOrder.OrderPaymentStatus == 1 || selectedOrder.Status == null]" disabled> غير مدفوع</button>
+          <button type="button" class="btn btn-primary" ng-class="{true: 'btn-warning'}[selectedOrder.OrderPaymentStatus == 2]" disabled> جزئي</button>
+          <button type="button" class="btn btn-primary" ng-class="{true: 'btn-success'}[selectedOrder.OrderPaymentStatus == 3]" >كلي</button>
         </div>
       </li>
       <li>
         <a>
           <b> رقم الطلب: #{{index+1}}
-          <sub>10/6/2017</sub>
+          <sub>{{selectedOrder.date | date : 'd/MM/y'}}</sub>
         </b>
         </a>
       </li>
@@ -69,8 +69,16 @@
           <div class="order-link" ng-click=selectOrder($index)>
             <div class="order-number"> رقم الطلب: {{$index+1}} </div>
             <small class="order-date">{{Order.date | date : 'EEE, d/MMM/y'}}</small>
-            <span class="label label-success">Success</span>
-            <span class="label label-danger">Danger</span>
+            <div class="">
+              <span class="label label-success" ng-if="Order.Status==3">مكتمل</span>
+              <span class="label label-warning" ng-if="Order.Status==2">قيد التنفيذ</span>
+              <span class="label label-danger" ng-if="Order.Status==1">لم يبدأ</span>
+            </div>
+            <div class="">
+              <span class="label label-success" ng-if="Order.OrderPaymentStatus==3">كلي</span>
+              <span class="label label-warning" ng-if="Order.OrderPaymentStatus==2">جزئي</span>
+              <span class="label label-danger" ng-if="Order.OrderPaymentStatus==1">غير مدفوع</span>
+            </div>
             <div class="order-item"> عدد العناصر : {{Order.Items.length}}</div>
             <div class="order-total"> السعر : {{Order.TotalPrice}} </div>
           </div>
@@ -82,7 +90,7 @@
          <div class="panel panel-default">
            <div class="panel-heading">
             <strong>  طباعة العنصر </strong>
-           <a href=""> <span class="glyphicon glyphicon-edit"></span> </a>
+           <a href=""> <span class="glyphicon glyphicon-plus"></span> </a>
          </div>
            <div class="panel-body">
              <table class="table item-table">
@@ -90,15 +98,28 @@
                  <tr>
                   <th>#{{$index+1}}</th>
                   <td>{{item.Name}}</td>
-                  <td><button class="btn btn-sm btn-block"
-                     data-toggle="modal" data-target="#itemModal" ng-click=viewItem(item)>view</button></td>
+                  <td>
+                    <div class="pull-right">
+
+
+                    <button class="btn btn-sm"
+                       data-toggle="modal"
+                       data-target="#itemModal"
+                       ng-click=viewItem(item)><i class="glyphicon glyphicon-eye-open"></i></button>
+                     <button class="btn btn-sm"
+                        data-toggle="modal"
+                        data-target="#edititemModal"
+                        ng-click=editItem(item)><i class="glyphicon glyphicon-edit"></i></button>
+                    <button class="btn btn-sm"
+                       ng-click=removeItem(item)><i class="glyphicon glyphicon-remove"></i></button>
+                       </div>
+                   </td>
                 </tr>
               </tbody>
             </table>
            </div>
          </div>
       </div>
-
       <div class="panel-group">
          <div class="panel panel-default">
            <div class="panel-heading">
@@ -176,58 +197,52 @@
        <div class="panel panel-success">
          <div class="panel-heading">
           <strong> السعر </strong>
-         <a href=""> <span class="glyphicon glyphicon-edit"></span> </a>
+         <a href=""> <span class="glyphicon glyphicon-plus"></span> </a>
        </div>
          <div class="panel-body">
            <table class="table pricing-table">
              <tbody>
                <tr>
-                 <th> السعر: </th>
+                 <th> السعر الكلي: </th>
                  <td>{{OrderList[index].TotalPrice}}</td>
                </tr>
                <tr>
-                 <th> معلومات اضافية:  </th>
-                 <td>--</td>
+                 <th>
+                 الدفعات:
+                 </th>
+                 <td ng-if="selectedOrder.Payments.length>0">
+                   <table class="table payment-table">
+                   <tbody ng-repeat="payment in selectedOrder.Payments track by $index" ng-cloak>
+                     <tr>
+                       <td>{{payment.PaymentDate | date : 'd/MM/y'}}</td>
+                       <td>{{payment.Ammount}}</td>
+                     </tr>
+                   </tbody>
+                 </table>
+                 </td>
+                 <td ng-if="selectedOrder.Payments.length==0">
+                    --
+                 </td>
                </tr>
-             <tbody>
+             </tbody>
            </table>
          </div>
           <div class="panel-footer">
             <table class="table item-table">
               <tbody>
                 <tr>
-                  <th> المجموع:  </th>
-                  <td>--</td>
+                  <th> مجموع الدفعات:  </th>
+                  <td>{{selectedOrder.TotalPayments}}</td>
+                </tr>
+                <tr>
+                  <th> الباقي:  </th>
+                  <td>{{selectedOrder.Remaning}}</td>
                 </tr>
               <tbody>
             </table>
           </div>
        </div>
     </div>
-    <div class="panel-group">
-     <div class="panel panel-success">
-       <div class="panel-body">
-         <table class="table pricing-table">
-           <tbody>
-             <tr>
-               <th> مدفوع جزئياً: </th>
-               <td>$0</td>
-             </tr>
-           <tbody>
-         </table>
-       </div>
-        <div class="panel-footer">
-          <table class="table pricing-table">
-            <tbody>
-              <tr>
-                <th> الرصيد: </th>
-                <td>$200</td>
-              </tr>
-            <tbody>
-          </table>
-        </div>
-     </div>
-  </div>
   <div class="well">
     <h4>معلومات للزبون</h4>
     <hr>

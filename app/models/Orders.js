@@ -6,11 +6,11 @@ var validate   = require('mongoose-validator');
  var OrderSchema = new Schema({
     TotalPrice:{
       type:Number,
-      default:null
+      default:0
     },
-    Payment:[{
+    Payments:[{
       Ammount:{
-        type:String,
+        type:Number,
         default:null
       },
       PaymentDate:{

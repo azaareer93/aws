@@ -75,25 +75,32 @@ font-weight: bold;
 
 .item-table>tbody>tr>th, .item-table>tbody>tr>td
 ,.pricing-table>tbody>tr>th, .pricing-table>tbody>tr>td{
-      text-align: right !important;
+      text-align: center;
       vertical-align: middle;
       padding: 3px;
-      max-width: 130px;
 }
+
 th{
   text-align: right !important;
 }
+
 .panel-heading .glyphicon{
   color:#337ab7;
   float: left;
   font-size: 18px;
 }
 .panel-body, .panel-footer{
-       border-top: 1;
+  border-top: 1;
   padding: 0;
 }
-.item-table, .pricing-table{
+.item-table, .pricing-table, .payment-table{
   margin: 0;
+
+}
+
+.payment-table>tbody>tr>th, .payment-table>tbody>tr>td{
+  border-top: none;
+
 }
 
 .file-list{
@@ -126,9 +133,6 @@ th{
   padding-right: 15px;
 }
 
-.item-table {
-  text-align: right;
-}
 
 .active{
   background-color: rgba(60, 118, 61, 0.25);

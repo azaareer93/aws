@@ -168,7 +168,7 @@ angular.module('MainController', ['AuthServices', 'queryService'])
 
     $scope.addNewPayment = function (payment) {
       if(payment>$scope.selectedOrder.Remaning || payment<=0){
-        toastr.warning("قيمة خاطئة");
+        toastr.warning("!!!");
       }else {
         data = {"orderId":$scope.selectedOrder._id,
         "Ammount":payment}
@@ -177,7 +177,7 @@ angular.module('MainController', ['AuthServices', 'queryService'])
           toastr.error(data.data.message);
           }else {
             toastr.success(data.data.message);
-            $scope.getOrders();
+            $scope.selectedOrder.Payments = data.data.order.Payments
             $scope.CalculatePayments(2);
             }
         }).catch(function(err) {

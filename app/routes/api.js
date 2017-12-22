@@ -70,7 +70,7 @@ module.exports = function(router) {
     router.put('/orders/payments/',function(req,res){
       var id = req.body.orderId;
       var Ammount = req.body.Ammount;
-      Orders.findOneAndUpdate({_id:id},{$push:{Payments:{Ammount:Ammount}}}).then(function(order) {
+      Orders.findOneAndUpdate({_id:id},{$push:{Payments:{Ammount:Ammount}}},{new: true}).then(function(order) {
          res.json({success:true, order:order, message:"new payment was added"});
        }).catch(function (err) {
          res.json({success:false , err:err});
@@ -91,7 +91,7 @@ module.exports = function(router) {
             Orders.findOneAndUpdate({_id:id},{$push:{files:{fileName:req.file.filename,
               filePath:req.file.path,
               fileSize:req.file.size,
-              fileMimetype:req.file.mimetype}}}).then(function(order) {
+              fileMimetype:req.file.mimetype}}},{new: true}).then(function(order) {
               res.json({success:true, order:order, message:"file was uploaded"});
             }).catch(function (err) {
               res.json({success:false , err:err});

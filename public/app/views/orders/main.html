@@ -105,13 +105,13 @@
                     <button class="btn btn-primary btn-sm"
                        data-toggle="modal"
                        data-target="#itemModal"
-                       ng-click=viewItem(item)><i class="glyphicon glyphicon-eye-open"></i></button>
+                       ng-click=viewItem(item)><i class="glyphicon glyphicon-open"></i></button>
                      <button class="btn btn-warning btn-sm"
                         data-toggle="modal"
                         data-target="#edititemModal"
                         ng-click=editItem(item)><i class="glyphicon glyphicon-edit"></i></button>
                     <button class="btn btn-danger btn-sm"
-                       ng-click=removeItem(item)><i class="glyphicon glyphicon-remove"></i></button>
+                       ng-click=removeItem(item)><i class="glyphicon glyphicon-trash"></i></button>
                        </div>
                    </td>
                 </tr>
@@ -231,14 +231,24 @@
             <table class="table item-table">
               <tbody>
                 <tr>
+                  <th> دفعة جديدة: </th>
+                  <td>
+                    <input type="number" class="form-control input-sm" id="paymentInput" min=0 max={{selectedOrder.Remaning}} ng-model="paymentInput" ng-init="0" placeholder="">
+                  </td>
+                  <td>
+                    <button class="btn btn-success btn-sm" ng-click="addNewPayment(paymentInput)">
+                      <i class="glyphicon glyphicon-plus"></i></button>
+                </td>
+                </tr>
+                <tr>
                   <th> مجموع الدفعات:  </th>
-                  <td>{{selectedOrder.TotalPayments}}</td>
+                  <td colspan="2">{{selectedOrder.TotalPayments}}</td>
                 </tr>
                 <tr>
                   <th> الباقي:  </th>
-                  <td>{{selectedOrder.Remaning}}</td>
+                  <td colspan="2">{{selectedOrder.Remaning}}</td>
                 </tr>
-              <tbody>
+              </tbody>
             </table>
           </div>
        </div>

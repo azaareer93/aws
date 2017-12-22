@@ -94,14 +94,12 @@
          </div>
            <div class="panel-body">
              <table class="table item-table">
-               <tbody ng-repeat="item in OrderList[index].Items">
-                 <tr>
+               <tbody>
+                 <tr ng-if="OrderList[index].Items.length>0" ng-repeat="item in OrderList[index].Items">
                   <th>#{{$index+1}}</th>
                   <td>{{item.Name}}</td>
                   <td>
                     <div class="pull-right">
-
-
                     <button class="btn btn-primary btn-sm"
                        data-toggle="modal"
                        data-target="#itemModal"
@@ -111,7 +109,7 @@
                         data-target="#edititemModal"
                         ng-click=editItem(item)><i class="glyphicon glyphicon-edit"></i></button>
                     <button class="btn btn-danger btn-sm"
-                       ng-click=removeItem(item)><i class="glyphicon glyphicon-trash"></i></button>
+                       ng-click="removeItem(item._id)"><i class="glyphicon glyphicon-trash"></i></button>
                        </div>
                    </td>
                 </tr>
@@ -230,13 +228,13 @@
           <div class="panel-footer">
             <table class="table item-table">
               <tbody>
-                <tr>
+                <tr ng-if="selectedOrder.Remaning>0">
                   <th> دفعة جديدة: </th>
                   <td>
-                    <input type="number" class="form-control input-sm" id="paymentInput" min=0 max={{selectedOrder.Remaning}} ng-model="paymentInput" ng-init="0" placeholder="">
+                    <input type="number" class="form-control input-sm" id="paymentInput" min=0 max={{selectedOrder.Remaning}} ng-model="paymentInput" ng-init="paymentInput=0" placeholder="">
                   </td>
                   <td>
-                    <button class="btn btn-success btn-sm" ng-click="addNewPayment(paymentInput)">
+                    <button class="btn btn-success btn-sm" ng-click=addNewPayment(paymentInput)>
                       <i class="glyphicon glyphicon-plus"></i></button>
                 </td>
                 </tr>

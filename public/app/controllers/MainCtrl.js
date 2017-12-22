@@ -149,25 +149,37 @@ angular.module('MainController', ['AuthServices', 'queryService'])
         }
           $scope.selectedOrder.TotalPayments = total;
           $scope.selectedOrder.Remaning =  $scope.selectedOrder.TotalPrice - total;
-          console.log($scope.selectedOrder.Remaning);
       }
     }
 
-    $scope.OrderPaymentStatus = function () {
-      for(var i = 0; i < $scope.OrderList.length; i++){
-        $scope.OrderList[i].OrderPaymentStatus = null;
-        if($scope.OrderList[i].Remaning == 0){
-          $scope.OrderList[i].OrderPaymentStatus = 3
-        }else if ($scope.OrderList[i].Remaning == $scope.OrderList[i].TotalPrice) {
-          $scope.OrderList[i].OrderPaymentStatus = 1
+    $scope.OrderPaymentStatus = function (action) {
+      if(action==1){
+        for(var i = 0; i < $scope.OrderList.length; i++){
+          $scope.OrderList[i].OrderPaymentStatus = null;
+          if($scope.OrderList[i].Remaning == 0){
+            $scope.OrderList[i].OrderPaymentStatus = 3
+          }else if ($scope.OrderList[i].Remaning == $scope.OrderList[i].TotalPrice) {
+            $scope.OrderList[i].OrderPaymentStatus = 1
+          }else {
+            $scope.OrderList[i].OrderPaymentStatus = 2
+          }
+        }
+      }
+      if(action==2){
+        if($scope.selectedOrder.Remaning == 0){
+          $scope.selectedOrder.OrderPaymentStatus = 3
+        }else if ($scope.selectedOrder.Remaning == $scope.selectedOrder.TotalPrice) {
+          $scope.selectedOrder.OrderPaymentStatus = 1
         }else {
-          $scope.OrderList[i].OrderPaymentStatus = 2
+          $scope.selectedOrder.OrderPaymentStatus = 2
         }
       }
     }
 
     $scope.addNewPayment = function (payment) {
-      if(payment>$scope.selectedOrder.Remaning || payment<=0){
+      console.log($scope.selectedOrder.Remaning);
+      console.log(payment);
+      if(payment>$scope.selectedOrder.Remaning || payment<=0 || !payment){
         toastr.warning("!!!");
       }else {
         data = {"orderId":$scope.selectedOrder._id,
@@ -179,12 +191,35 @@ angular.module('MainController', ['AuthServices', 'queryService'])
             toastr.success(data.data.message);
             $scope.selectedOrder.Payments = data.data.order.Payments
             $scope.CalculatePayments(2);
+            $scope.OrderPaymentStatus(2);
             }
         }).catch(function(err) {
         console.log(err);
       });
       }
     }
+    $scope.removeItem = function (itemId) {
+      data = {
+        "orderId":$scope.selectedOrder._id,
+        "itemId":itemId
+      }
+      qService.query('PUT','/api/orders/items/',data,null).then(function(data){
+      if(!data.data.success){
+        toastr.error(data.data.message);
+        }else {
+          toastr.success(data.data.message);
+          if(data.data.order.Items.length==0){
+            $scope.selectedOrder.Items = []
+          }else {
+              $scope.selectedOrder.Items = data.data.order.Items
+          }
+          }
+      }).catch(function(err) {
+      console.log(err);
+    });
+
+    }
+
       $scope.checkSession = function() {
         // Only run check if user is logged in
         if (Auth.isLoggedIn()) {

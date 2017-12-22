@@ -77,6 +77,17 @@ module.exports = function(router) {
        });
       });
 
+      router.put('/orders/items/',function(req,res){
+        var id = req.body.orderId;
+        var itemId = req.body.itemId;
+        console.log(id, itemId);
+        Orders.findOneAndUpdate({_id:id},{$pop:{Items:{_id:itemId}}},{new: true}).then(function(order) {
+           res.json({success:true, order:order, message:"item was deleted successfuly"});
+         }).catch(function (err) {
+           res.json({success:false , err:err});
+         });
+        });
+
     router.put('/orders/files/',function(req,res){
       config.upload(req, res, function (err) {
          if (err) {

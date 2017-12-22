@@ -12,7 +12,7 @@ mongoose.Promise = global.Promise;
     Payments:[{
       Ammount:{
         type:Number,
-        default:null
+        default:0
       },
       PaymentDate:{
           type:Date,

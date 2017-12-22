@@ -100,7 +100,11 @@ th{
 
 .payment-table>tbody>tr>th, .payment-table>tbody>tr>td{
   border-top: none;
-
+}
+.payment-table>tbody{
+   display: block;
+  max-height: 100px;
+  overflow-y: auto;
 }
 
 .file-list{

@@ -37,7 +37,7 @@
         <div class="btn-group btn-group-sm payment-status" id="order-status">
           <button type="button" class="btn btn-primary" ng-class="{true: 'btn-danger'}[selectedOrder.OrderPaymentStatus == 1 || selectedOrder.Status == null]" disabled> غير مدفوع</button>
           <button type="button" class="btn btn-primary" ng-class="{true: 'btn-warning'}[selectedOrder.OrderPaymentStatus == 2]" disabled> جزئي</button>
-          <button type="button" class="btn btn-primary" ng-class="{true: 'btn-success'}[selectedOrder.OrderPaymentStatus == 3]" >كلي</button>
+          <button type="button" class="btn btn-primary" ng-click="addNewPayment(selectedOrder.Remaning)" ng-class="{true: 'btn-success'}[selectedOrder.OrderPaymentStatus == 3]" >كلي</button>
         </div>
       </li>
       <li>
@@ -102,15 +102,15 @@
                     <div class="pull-right">
 
 
-                    <button class="btn btn-sm"
+                    <button class="btn btn-primary btn-sm"
                        data-toggle="modal"
                        data-target="#itemModal"
                        ng-click=viewItem(item)><i class="glyphicon glyphicon-eye-open"></i></button>
-                     <button class="btn btn-sm"
+                     <button class="btn btn-warning btn-sm"
                         data-toggle="modal"
                         data-target="#edititemModal"
                         ng-click=editItem(item)><i class="glyphicon glyphicon-edit"></i></button>
-                    <button class="btn btn-sm"
+                    <button class="btn btn-danger btn-sm"
                        ng-click=removeItem(item)><i class="glyphicon glyphicon-remove"></i></button>
                        </div>
                    </td>
@@ -212,8 +212,8 @@
                  </th>
                  <td ng-if="selectedOrder.Payments.length>0">
                    <table class="table payment-table">
-                   <tbody ng-repeat="payment in selectedOrder.Payments track by $index" ng-cloak>
-                     <tr>
+                   <tbody>
+                     <tr  ng-repeat="payment in selectedOrder.Payments track by $index" ng-cloak>
                        <td>{{payment.PaymentDate | date : 'd/MM/y'}}</td>
                        <td>{{payment.Ammount}}</td>
                      </tr>

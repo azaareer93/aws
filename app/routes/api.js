@@ -67,6 +67,16 @@ module.exports = function(router) {
 
       });
 
+    router.put('/orders/payments/',function(req,res){
+      var id = req.body.orderId;
+      var Ammount = req.body.Ammount;
+      Orders.findOneAndUpdate({_id:id},{$push:{Payments:{Ammount:Ammount}}}).then(function(order) {
+         res.json({success:true, order:order, message:"new payment was added"});
+       }).catch(function (err) {
+         res.json({success:false , err:err});
+       });
+      });
+
     router.put('/orders/files/',function(req,res){
       config.upload(req, res, function (err) {
          if (err) {

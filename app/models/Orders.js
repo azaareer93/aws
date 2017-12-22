@@ -1,7 +1,8 @@
 var mongoose   = require('mongoose');
 var Schema     = mongoose.Schema;
 var validate   = require('mongoose-validator');
- mongoose.Promise = global.Promise;
+var Promise          = require('mpromise');
+mongoose.Promise = global.Promise;
 
  var OrderSchema = new Schema({
     TotalPrice:{

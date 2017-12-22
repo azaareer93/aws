@@ -27,8 +27,8 @@ angular.module('MainController', ['AuthServices', 'queryService'])
           if (res.data.success) {
             $scope.OrderList = res.data.orders;
             $scope.selectedOrder = $scope.OrderList[$scope.index]
-            $scope.CalculatePayments();
-            $scope.OrderPaymentStatus();
+            $scope.CalculatePayments(1);
+            $scope.OrderPaymentStatus(1);
           } else {
             $scope.orderList  = null;
           }
@@ -40,7 +40,8 @@ angular.module('MainController', ['AuthServices', 'queryService'])
       $scope.selectOrder = function (orderIndex){
         $scope.index = orderIndex;
         $scope.selectedOrder = $scope.OrderList[orderIndex];
-        $scope.CalculatePayments();
+        $scope.CalculatePayments(2);
+
       }
 
       $scope.viewItem = function (item) {
@@ -128,15 +129,27 @@ angular.module('MainController', ['AuthServices', 'queryService'])
     });
       }
 
-    $scope.CalculatePayments = function() {
-      for(var i = 0; i < $scope.OrderList.length; i++){
+    $scope.CalculatePayments = function(action) {
+      if(action==1){
+        for(var i = 0; i < $scope.OrderList.length; i++){
+          var total = 0;
+          for(var j = 0; j < $scope.OrderList[i].Payments.length; j++){
+              var payment =  $scope.OrderList[i].Payments[j].Ammount;
+              total += payment;
+          }
+            $scope.OrderList[i].TotalPayments = total;
+            $scope.OrderList[i].Remaning =  $scope.OrderList[i].TotalPrice - total;
+        }
+      }
+      if(action==2){
         var total = 0;
-        for(var j = 0; j < $scope.OrderList[i].Payments.length; j++){
-            var payment =  $scope.OrderList[i].Payments[j].Ammount;
+        for(var i = 0; i < $scope.selectedOrder.Payments.length; i++){
+            var payment =  $scope.selectedOrder.Payments[i].Ammount;
             total += payment;
         }
-          $scope.OrderList[i].TotalPayments = total;
-          $scope.OrderList[i].Remaning =  $scope.OrderList[i].TotalPrice - total;
+          $scope.selectedOrder.TotalPayments = total;
+          $scope.selectedOrder.Remaning =  $scope.selectedOrder.TotalPrice - total;
+          console.log($scope.selectedOrder.Remaning);
       }
     }
 
@@ -150,6 +163,26 @@ angular.module('MainController', ['AuthServices', 'queryService'])
         }else {
           $scope.OrderList[i].OrderPaymentStatus = 2
         }
+      }
+    }
+
+    $scope.addNewPayment = function (payment) {
+      if(payment>$scope.selectedOrder.Remaning || payment<=0){
+        toastr.warning("قيمة خاطئة");
+      }else {
+        data = {"orderId":$scope.selectedOrder._id,
+        "Ammount":payment}
+        qService.query('PUT','/api/orders/payments/',data,null).then(function(data){
+        if(!data.data.success){
+          toastr.error(data.data.message);
+          }else {
+            toastr.success(data.data.message);
+            $scope.getOrders();
+            $scope.CalculatePayments(2);
+            }
+        }).catch(function(err) {
+        console.log(err);
+      });
       }
     }
       $scope.checkSession = function() {

@@ -77,15 +77,32 @@ module.exports = function(router) {
        });
       });
 
-      router.put('/orders/items/',function(req,res){
+      router.put('/orders/delete-items/',function(req,res){
         var id = req.body.orderId;
         var itemId = req.body.itemId;
-        console.log(id, itemId);
-        Orders.findOneAndUpdate({_id:id},{$pop:{Items:{_id:itemId}}},{new: true}).then(function(order) {
+        Orders.findOneAndUpdate({_id:id},{$pull:{Items:{_id:itemId}}},{new: true}).then(function(order) {
            res.json({success:true, order:order, message:"item was deleted successfuly"});
          }).catch(function (err) {
            res.json({success:false , err:err});
          });
+        });
+
+      router.put('/orders/put-items/',function(req,res){
+        var id = req.body.orderId;
+        var item = req.body.item;
+        if(item._id){
+        Orders.update({"Items._id":item._id},{$set:{"Items.$":item}},{new: true}).then(function(order) {
+           res.json({success:true, order:order, message:"item was updated successfuly"});
+         }).catch(function (err) {
+           res.json({success:false , err:err});
+         });
+       }else {
+         Orders.findOneAndUpdate({_id:id},{$push:{Items:item}},{new: true}).then(function(order) {
+            res.json({success:true, order:order, message:"item was added successfuly"});
+          }).catch(function (err) {
+            res.json({success:false , err:err});
+          });
+       }
         });
 
     router.put('/orders/files/',function(req,res){

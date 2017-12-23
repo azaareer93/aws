@@ -64,19 +64,19 @@
           <div class="form-group">
             <label for="price" class="col-sm-1 col-xs-2 control-label pull-left">السعر</label>
             <div class="col-sm-6 pull-left">
-              <input type="text"class="form-control input-sm" id="price" ng-model="Order.TotalPrice" ng-init=0  >
+              <input type="number" min="0" class="form-control input-sm" id="price" ng-model="Order.TotalPrice" ng-init="Order.TotalPrice=0">
             </div>
           </div>
           <div class="form-group">
             <label for="first" class="col-sm-1 col-xs-2 control-label pull-left">عربون</label>
             <div class="col-sm-6 pull-left">
-              <input type="text"class="form-control input-sm" id="first" ng-model="Order.Payment.Ammount" ng-init=0>
+              <input type="number" min="0" max={{Order.TotalPrice}} class="form-control input-sm" id="first" ng-model="Order.Payment.Ammount">
             </div>
           </div>
           <div class="form-group">
             <label for="remain"  class="col-sm-1 col-xs-2 control-label pull-left">الباقي </label>
-            <div class="col-sm-6 pull-left">
-              <input type="text"class="form-control input-sm" id="remain" ng-value=Order.TotalPrice-Order.Payment.Ammount disabled>
+            <div class="col-sm-6 pull-left" id="remain">
+              <h5><span  class="label label-info">{{Order.TotalPrice-Order.Payment.Ammount}}</span></h5>
             </div>
           </div>
         </div>
@@ -85,7 +85,7 @@
     <hr/>
     <div class="row">
       <div class="col-md-12">
-        <table class="table table-bordered" >
+        <table class="table table table-striped table-bordered table-hover table-condensed" >
           <thead>
             <tr>
               <th>العينة</th>
@@ -96,8 +96,7 @@
               <th>الحجم</th>
               <th>الطباعة على الظهر</th>
               <th>الطباعة على الوجه</th>
-              <th>الحجم1</th>
-              <th>الحجم2</th>
+              <th>الاحجام</th>
               <th>حذف</th>
 
             </tr>
@@ -113,63 +112,49 @@
               <td>{{item.PrintOnChest}}</td>
               <td>{{item.PrintOnBack}}</td>
               <td>
-                <table  class="table table-bordered" dir="ltr">
-                  <tr>
+                <table class="table table table-striped table-bordered table-hover size-table">
+                  <thead>
                     <th>s</th>
-                    <td>{{item.s}}</td>
-                  </tr>
-                  <tr>
                     <th>m</th>
-                    <td>{{item.m}}</td>
-                  </tr>
-                  <tr>
                     <th>l</th>
-                    <td>{{item.l}}</td>
-                  </tr>
-                  <tr>
                     <th>xl</th>
-                    <td>{{item.xl}}</td>
-                  </tr>
-                  <tr>
                     <th>xxl</th>
-                    <td>{{item.xxl}}</td>
-                  </tr>
-                  <tr>
                     <th>xxxl</th>
-                    <td>{{item.xxxl}}</td>
-                  </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{item.s}}</td>
+                      <td>{{item.m}}</td>
+                      <td>{{item.l}}</td>
+                      <td>{{item.xl}}</td>
+                      <td>{{item.xxl}}</td>
+                      <td>{{item.xxxl}}</td>
+                    </tr>
+                  </tbody>
                 </table>
-              </td>
-              <td>
-                <table  class="table table-bordered" dir="ltr">
-                  <tr>
+                <table class="table table table-striped table-bordered table-hover size-table">
+                  <thead>
+                    <th>4</th>
                     <th>6</th>
-                    <td>{{item['6']}}</td>
-                  </tr>
-                  <tr>
                     <th>8</th>
-                    <td>{{item['8']}}</td>
-                  </tr>
-                  <tr>
                     <th>10</th>
-                    <td>{{item['10']}}</td>
-                  </tr>
-                  <tr>
                     <th>12</th>
-                    <td>{{item['12']}}</td>
-                  </tr>
-                  <tr>
                     <th>14</th>
-                    <td>{{item['14']}}</td>
-                  </tr>
-                  <tr>
                     <th>16</th>
-                    <td>{{item['16']}}</td>
-                  </tr>
-                  <tr>
                     <th>18</th>
-                    <td>{{item['18']}}</td>
-                  </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{item['4']}}</td>
+                      <td>{{item['6']}}</td>
+                      <td>{{item['8']}}</td>
+                      <td>{{item['10']}}</td>
+                      <td>{{item['12']}}</td>
+                      <td>{{item['14']}}</td>
+                      <td>{{item['16']}}</td>
+                      <td>{{item['18']}}</td>
+                    </tr>
+                  </tbody>
                 </table>
               </td>
               <td>

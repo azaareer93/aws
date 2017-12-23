@@ -13,14 +13,13 @@ angular.module('OrderController', ['AuthServices', 'queryService'])
           $location.path('/'); // Redirect to home page
           $scope.loadme = true; // Allow loading of page
         }
-        $scope.getOrders();
         $scope.loadme = true;
         $scope.UserName = data.data.UserName;
       });
     }else {
       $location.path('/login'); // Redirect to home page
     }
-    
+
 
     $scope.addItem = function (item) {
       $scope.Order.Items.push(item)

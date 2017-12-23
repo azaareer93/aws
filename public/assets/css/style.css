@@ -78,6 +78,7 @@ font-weight: bold;
       text-align: center;
       vertical-align: middle;
       padding: 3px;
+      max-width: 120px;
 }
 
 th{
@@ -96,13 +97,15 @@ th{
 .item-table, .pricing-table, .payment-table{
   margin: 0;
 
+
 }
 
 .payment-table>tbody>tr>th, .payment-table>tbody>tr>td{
   border-top: none;
+
 }
-.payment-table>tbody{
-   display: block;
+.payment-body{
+  display: block;
   max-height: 100px;
   overflow-y: auto;
 }
@@ -165,4 +168,9 @@ th{
 td{
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.size-table>tbody>tr>td, .size-table>thead>tr>th{
+  padding: 2px;
+  
 }

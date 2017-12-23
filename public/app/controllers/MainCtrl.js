@@ -54,11 +54,11 @@ angular.module('MainController', ['AuthServices', 'queryService'])
 
         $scope.File = $('#orderFile')[0].files[0];
         if ($scope.File) {
+          $scope.$apply();
           $scope.uploadButton = true;
         }else {
             $scope.uploadButton = false;
         }
-        $scope.$apply();
 
       }
 
@@ -81,8 +81,9 @@ angular.module('MainController', ['AuthServices', 'queryService'])
             toastr.error(data.data.message);
             }else {
               toastr.success(data.data.message);
-              // $scope.OrderList[$scope.index].files = data.data.order.files
-              $scope.getOrders()
+              $scope.selectedOrder.files = data.data.order.files;
+              $scope.uploadButton = false;
+              $scope.File
               }
           }).catch(function(err) {
           console.log(err);
@@ -177,8 +178,6 @@ angular.module('MainController', ['AuthServices', 'queryService'])
     }
 
     $scope.addNewPayment = function (payment) {
-      console.log($scope.selectedOrder.Remaning);
-      console.log(payment);
       if(payment>$scope.selectedOrder.Remaning || payment<=0 || !payment){
         toastr.warning("!!!");
       }else {
@@ -193,17 +192,23 @@ angular.module('MainController', ['AuthServices', 'queryService'])
             $scope.CalculatePayments(2);
             $scope.OrderPaymentStatus(2);
             }
+            $timeout(function() {
+              scrollDown("payment-body");
+            }, 0, false);
+
         }).catch(function(err) {
         console.log(err);
       });
       }
     }
+
     $scope.removeItem = function (itemId) {
       data = {
         "orderId":$scope.selectedOrder._id,
         "itemId":itemId
       }
-      qService.query('PUT','/api/orders/items/',data,null).then(function(data){
+      console.log(data);
+      qService.query('PUT','/api/orders/delete-items/',data,null).then(function(data){
       if(!data.data.success){
         toastr.error(data.data.message);
         }else {
@@ -220,6 +225,57 @@ angular.module('MainController', ['AuthServices', 'queryService'])
 
     }
 
+    $scope.addNewItem = function (item) {
+      data = {
+        "orderId":$scope.selectedOrder._id,
+        "item":item
+      }
+      qService.query('PUT','/api/orders/put-items/',data,null).then(function(data){
+      if(!data.data.success){
+        toastr.error(data.data.message);
+        }else {
+          toastr.success(data.data.message);
+          if(data.data.order.Items.length==0){
+            $scope.selectedOrder.Items = []
+          }else {
+            $scope.selectedOrder.Items = data.data.order.Items
+          }
+        }
+      }).catch(function(err) {
+      console.log(err);
+    });
+    $scope.item = null
+    }
+
+    $scope.PutItemToEdit = function (item) {
+      $scope.itemToEdit = item
+    }
+
+    $scope.EditItem = function (item) {
+      data = {
+        "orderId":$scope.selectedOrder._id,
+        "item":item
+      }
+      qService.query('PUT','/api/orders/put-items/',data,null).then(function(data){
+      if(!data.data.success){
+        toastr.error(data.data.message);
+        }else {
+          toastr.success(data.data.message);
+          if(data.data.order.Items.length==0){
+            $scope.selectedOrder.Items = []
+          }else {
+            $scope.selectedOrder.Items = data.data.order.Items
+          }
+        }
+      }).catch(function(err) {
+      console.log(err);
+    });
+    $scope.item = null
+    }
+    scrollDown = function (id) {
+      var scroller = document.getElementById(id);
+      scroller.scrollTop =  scroller.scrollHeight + 100;
+    }
       $scope.checkSession = function() {
         // Only run check if user is logged in
         if (Auth.isLoggedIn()) {

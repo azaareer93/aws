@@ -79,8 +79,8 @@
               <span class="label label-warning" ng-if="Order.OrderPaymentStatus==2">جزئي</span>
               <span class="label label-danger" ng-if="Order.OrderPaymentStatus==1">غير مدفوع</span>
             </div>
-            <div class="order-item"> عدد العناصر : {{Order.Items.length}}</div>
-            <div class="order-total"> السعر : {{Order.TotalPrice}} </div>
+            <div class="order-item"> عدد العينات: {{Order.Items.length}}</div>
+            <div class="order-total"> السعر الكلي: {{Order.TotalPrice}} </div>
           </div>
         </div>
       </div>
@@ -89,8 +89,8 @@
         <div class="panel-group">
          <div class="panel panel-default">
            <div class="panel-heading">
-            <strong>  طباعة العنصر </strong>
-           <a href=""> <span class="glyphicon glyphicon-plus"></span> </a>
+            <strong> قائمة العينات</strong>
+           <a href="" data-toggle="modal" data-target="#AdditemModal"><span class="glyphicon glyphicon-plus"></span> </a>
          </div>
            <div class="panel-body">
              <table class="table item-table">
@@ -103,11 +103,11 @@
                     <button class="btn btn-primary btn-sm"
                        data-toggle="modal"
                        data-target="#itemModal"
-                       ng-click=viewItem(item)><i class="glyphicon glyphicon-open"></i></button>
+                       ng-click=viewItem(item)><i class="glyphicon glyphicon-eye-open"></i></button>
                      <button class="btn btn-warning btn-sm"
                         data-toggle="modal"
-                        data-target="#edititemModal"
-                        ng-click=editItem(item)><i class="glyphicon glyphicon-edit"></i></button>
+                        data-target="#EdititemModal"
+                        ng-click=PutItemToEdit(item)><i class="glyphicon glyphicon-edit"></i></button>
                     <button class="btn btn-danger btn-sm"
                        ng-click="removeItem(item._id)"><i class="glyphicon glyphicon-trash"></i></button>
                        </div>
@@ -157,7 +157,7 @@
         </div>
       </div>
 
-      <div class="panel-group">
+      <!-- <div class="panel-group">
          <div class="panel panel-default">
            <div class="panel-heading">
             <strong> عنوان الدفع </strong>
@@ -188,14 +188,13 @@
            <div class="panel-body">
            </div>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="col-md-3">
       <div class="panel-group">
        <div class="panel panel-success">
          <div class="panel-heading">
           <strong> السعر </strong>
-         <a href=""> <span class="glyphicon glyphicon-plus"></span> </a>
        </div>
          <div class="panel-body">
            <table class="table pricing-table">
@@ -209,8 +208,8 @@
                  الدفعات:
                  </th>
                  <td ng-if="selectedOrder.Payments.length>0">
-                   <table class="table payment-table">
-                   <tbody>
+                   <table class="table payment-table" id="payment-table">
+                   <tbody class="payment-body" id="payment-body">
                      <tr  ng-repeat="payment in selectedOrder.Payments track by $index" ng-cloak>
                        <td>{{payment.PaymentDate | date : 'd/MM/y'}}</td>
                        <td>{{payment.Ammount}}</td>
@@ -271,21 +270,17 @@
     </div>
     <div class="col-md-3">
       <div class="well file-list">
-        <div class="empty" ng-if=!OrderList[index].files.length ng-cloak>
+        <div class="empty" ng-show="OrderList[index].files.length==0"  ng-cloak>
           <span class="glyphicon glyphicon-file"></span>
           <h4>الملفات</h4>
           <p>لم يتم تحميل اي ملف.</p>
         </div>
-        <div class="" ng-if=OrderList[index].files>
+        <div ng-show="OrderList[index].files.length>0"  ng-cloak>
           <table class="table item-table">
-            <tbody ng-repeat="file in OrderList[index].files track by $index" ng-cloak>
-              <tr>
+            <tbody>
+              <tr ng-repeat="file in OrderList[index].files track by $index" >
                <th>#{{$index+1}}</th>
-               <td>{{file.fileName}}</td>
-               <td>
-                 <a href=../../../uploads/{{file.fileName}} target="_blank">link</a>
-               </td>
-
+               <td><a href=../../../uploads/{{file.fileName}} target="_blank">{{file.fileName}}</a></td>
              </tr>
            </tbody>
          </table>
@@ -297,7 +292,6 @@
 
       </label>
       <hr/>
-
       <button class="btn btn-warning btn-block" ng-if='uploadButton' ng-click='uploadfile()'>
           <i class="glyphicon glyphicon-upload"></i>
           تحميل
@@ -315,10 +309,10 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">العينة</h4>
+        <h4 class="modal-title">بيانات العينة</h4>
       </div>
       <div class="modal-body">
-        <table class="table item-table">
+        <table class="table table-striped table-bordered table-hover table-condensed">
           <tbody>
             <tr>
              <th>العنصر: </th>
@@ -337,6 +331,18 @@
               <td>{{ItemToView.PColor}}</td>
             </tr>
             <tr>
+              <th> الطباعة على الظهر :  </th>
+              <td>
+                <span  ng-class="{true: 'glyphicon glyphicon-ok text-success',false:'glyphicon glyphicon-remove text-danger',null:'glyphicon glyphicon-remove text-danger' }[ItemToView.PrintOnBack]"></span>
+              </td>
+            </tr>
+            <tr>
+              <th> الطباعة على الوجه :  </th>
+              <td>
+                <span  ng-class="{true: 'glyphicon glyphicon-ok text-success', false:'glyphicon glyphicon-remove text-danger',null:'glyphicon glyphicon-remove text-danger' }[ItemToView.PrintOnChest]"></span>
+              </td>
+            </tr>
+            <tr>
               <th> معلومات اضافية:  </th>
               <td>{{ItemToView.Note}}</td>
             </tr>
@@ -346,7 +352,7 @@
             </tr>
           <tbody>
         </table>
-        <table class="table item-table table-bordered table-condensed">
+        <table class="table table-striped table-bordered table-hover table-condensed">
           <thead>
             <th>s</th>
             <th>m</th>
@@ -367,7 +373,7 @@
           </tbody>
         </table>
         <br>
-        <table class="table item-table table-bordered table-condensed">
+        <table class="table table-striped table-bordered table-hover table-condensed">
           <thead>
             <th>4</th>
             <th>6</th>
@@ -394,14 +400,14 @@
         </table>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">اغلاق</button>
       </div>
     </div>
 
   </div>
 </div>
 
-<!-- item modal -->
+<!--Client modal -->
 <div class="modal fade" id="ClientModal" role="dialog">
   <div class="modal-dialog">
 
@@ -464,4 +470,313 @@
 
   </div>
 </div>
+
+<!-- Add new Item-->
+<div class="modal fade" id="AdditemModal" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"> اضافة عينة </h4>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="item">العينة</label>
+              <input type="text"class="form-control input-sm" id="item" ng-model="item.Name" placeholder="">
+            </div>
+            <div class="form-group">
+              <label for="quantity">الكمية</label>
+              <input type="text"class="form-control input-sm" id="quantity" ng-model="item.Quantity" placeholder="">
+            </div>
+            <div class="form-group">
+              <label for="bgcolor">لون الارضية</label>
+              <input type="text"class="form-control input-sm" id="bgcolor" ng-model="item.GColor" placeholder="">
+            </div>
+            <div class="form-group">
+              <label for="bgcolor"> الحجم </label>
+              <input type="text"class="form-control input-sm" id="bgcolor" ng-model="item.Size" placeholder="">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="extra">معلومات اضافية</label>
+              <textarea class="form-control text-info" rows="3"class="form-control input-sm" ng-model="item.Note" id="extra" placeholder=""></textarea>
+            </div>
+            <div class="form-group">
+              <label for="pcolor">لون الطباعة</label>
+              <input type="text"class="form-control input-sm" id="pcolor" ng-model="item.PColor" placeholder="">
+            </div>
+            <div class="checkbox">
+            <label>
+              <input class="pull-right" type="checkbox" ng-model="item.PrintOnChest">
+              <span class="check-box-span"> الطباعة على الوجه </span>
+            </label>
+          </div>
+          <div class="checkbox">
+          <label>
+            <input class="pull-right" type="checkbox" ng-model="item.PrintOnBack">
+            <span class="check-box-span"> الطباعة على الظهر </span>
+          </label>
+        </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="pcolor">S</label>
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['s']" ng-init="item['s']=0" placeholder="">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="pcolor">M</label>
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['m']" ng-init="item['m']=0" placeholder="">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="pcolor">L</label>
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['l']" ng-init="item['l']=0" placeholder="">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="pcolor">XL</label>
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['xl']" ng-init="item['xl']=0" placeholder="">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="pcolor">XXL</label>
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['xxl']" ng-init="item['xxl']=0" placeholder="">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="pcolor">XXL</label>
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['xxxl']" ng-init="item['xxxl']=0" placeholder="">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="pcolor">4</label>
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['4']" ng-init="item['4']=0" placeholder="">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="pcolor">6</label>
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['6']" ng-init="item['6']=0" placeholder="">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="pcolor">8</label>
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['8']" ng-init="item['8']=0" placeholder="">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="pcolor">10</label>
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['10']" ng-init="item['10']=0" placeholder="">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="pcolor">12</label>
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['12']" ng-init="item['12']=0" placeholder="">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="pcolor">14</label>
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['14']" ng-init="item['14']=0" placeholder="">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="pcolor">16</label>
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['16']" ng-init="item['16']=0" placeholder="">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="pcolor">18</label>
+              <input type="number"class="form-control input-sm" id="pcolor" ng-model="item['18']" ng-init="item['18']=0" placeholder="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">خروج</button>
+        <button type="button" class="btn btn-praimary" ng-click=addNewItem(item) data-dismiss="modal">اضف العينة</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- Edit Item-->
+  <div class="modal fade" id="EdititemModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title"> اضافة عينة </h4>
+        </div>
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="item">العينة</label>
+                <input type="text"class="form-control input-sm" id="item" ng-model="itemToEdit.Name" placeholder="">
+              </div>
+              <div class="form-group">
+                <label for="quantity">الكمية</label>
+                <input type="text"class="form-control input-sm" id="quantity" ng-model="itemToEdit.Quantity" placeholder="">
+              </div>
+              <div class="form-group">
+                <label for="bgcolor">لون الارضية</label>
+                <input type="text"class="form-control input-sm" id="bgcolor" ng-model="itemToEdit.GColor" placeholder="">
+              </div>
+              <div class="form-group">
+                <label for="bgcolor"> الحجم </label>
+                <input type="text"class="form-control input-sm" id="bgcolor" ng-model="itemToEdit.Size" placeholder="">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="extra">معلومات اضافية</label>
+                <textarea class="form-control text-info" rows="3"class="form-control input-sm" ng-model="itemToEdit.Note" id="extra" placeholder=""></textarea>
+              </div>
+              <div class="form-group">
+                <label for="pcolor">لون الطباعة</label>
+                <input type="text"class="form-control input-sm" id="pcolor" ng-model="itemToEdit.PColor" placeholder="">
+              </div>
+              <div class="checkbox">
+              <label>
+                <input class="pull-right" type="checkbox" ng-model="itemToEdit.PrintOnChest">
+                <span class="check-box-span"> الطباعة على الوجه </span>
+              </label>
+            </div>
+            <div class="checkbox">
+            <label>
+              <input class="pull-right" type="checkbox" ng-model="itemToEdit.PrintOnBack">
+              <span class="check-box-span"> الطباعة على الظهر </span>
+            </label>
+          </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="pcolor">S</label>
+                <input type="number"class="form-control input-sm" id="pcolor" ng-model="itemToEdit['s']" ng-init="itemToEdit['s']=0" placeholder="">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="pcolor">M</label>
+                <input type="number"class="form-control input-sm" id="pcolor" ng-model="itemToEdit['m']" ng-init="itemToEdit['m']=0" placeholder="">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="pcolor">L</label>
+                <input type="number"class="form-control input-sm" id="pcolor" ng-model="itemToEdit['l']" ng-init="itemToEdit['l']=0" placeholder="">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="pcolor">XL</label>
+                <input type="number"class="form-control input-sm" id="pcolor" ng-model="itemToEdit['xl']" ng-init="itemToEdit['xl']=0" placeholder="">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="pcolor">XXL</label>
+                <input type="number"class="form-control input-sm" id="pcolor" ng-model="itemToEdit['xxl']" ng-init="itemToEdit['xxl']=0" placeholder="">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="pcolor">XXL</label>
+                <input type="number"class="form-control input-sm" id="pcolor" ng-model="itemToEdit['xxxl']" ng-init="itemToEdit['xxxl']=0" placeholder="">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="pcolor">4</label>
+                <input type="number"class="form-control input-sm" id="pcolor" ng-model="itemToEdit['4']" ng-init="itemToEdit['4']=0" placeholder="">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="pcolor">6</label>
+                <input type="number"class="form-control input-sm" id="pcolor" ng-model="itemToEdit['6']" ng-init="itemToEdit['6']=0" placeholder="">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="pcolor">8</label>
+                <input type="number"class="form-control input-sm" id="pcolor" ng-model="itemToEdit['8']" ng-init="itemToEdit['8']=0" placeholder="">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="pcolor">10</label>
+                <input type="number"class="form-control input-sm" id="pcolor" ng-model="itemToEdit['10']" ng-init="itemToEdit['10']=0" placeholder="">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="pcolor">12</label>
+                <input type="number"class="form-control input-sm" id="pcolor" ng-model="itemToEdit['12']" ng-init="itemToEdit['12']=0" placeholder="">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="pcolor">14</label>
+                <input type="number"class="form-control input-sm" id="pcolor" ng-model="itemToEdit['14']" ng-init="itemToEdit['14']=0" placeholder="">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="pcolor">16</label>
+                <input type="number"class="form-control input-sm" id="pcolor" ng-model="itemToEdit['16']" ng-init="itemToEdit['16']=0" placeholder="">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="pcolor">18</label>
+                <input type="number"class="form-control input-sm" id="pcolor" ng-model="itemToEdit['18']" ng-init="itemToEdit['18']=0" placeholder="">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">خروج</button>
+          <button type="button" class="btn btn-praimary" ng-click=EditItem(itemToEdit) data-dismiss="modal"> حفظ التعديلات </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
 </div>

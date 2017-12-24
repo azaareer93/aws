@@ -27,13 +27,13 @@
         <label for="order-status">  وضع الطلب:</label>
           <div class="btn-group btn-group-sm order-status" id="order-status">
             <button type="button" class="btn btn-primary" ng-click="ChangeOrderStatus(1)" ng-class="{true: 'btn-danger'}[selectedOrder.Status == 1 || selectedOrder.Status == null]">لم يبدأ</button>
-            <button type="button" class="btn btn-primary" ng-click="ChangeOrderStatus(2)" ng-class="{true: 'btn-warning'}[selectedOrder.Status == 2]">تحت التنفيذ</button>
+            <button type="button" class="btn btn-primary" ng-click="ChangeOrderStatus(2)" ng-class="{true: 'btn-warning'}[selectedOrder.Status == 2]"> قيد التنفيذ </button>
             <button type="button" class="btn btn-primary"  ng-click="ChangeOrderStatus(3)" ng-class="{true: 'btn-success'}[selectedOrder.Status == 3]">مكتمل</button>
           </div>
       </li>
       <li class="empty-li"> </li>
       <li>
-        <label for="payment-status">وضع الدفع</label>
+        <label for="payment-status">وضع الدفع:</label>
         <div class="btn-group btn-group-sm payment-status" id="order-status">
           <button type="button" class="btn btn-primary" ng-class="{true: 'btn-danger'}[selectedOrder.OrderPaymentStatus == 1 || selectedOrder.Status == null]" disabled> غير مدفوع</button>
           <button type="button" class="btn btn-primary" ng-class="{true: 'btn-warning'}[selectedOrder.OrderPaymentStatus == 2]" disabled> جزئي</button>
@@ -137,7 +137,7 @@
                  </tr>
                  <tr>
                    <th>العنوان: </th>
-                   <td>{{OrderList[index0].Client.Address}}</td>
+                   <td>{{OrderList[index].Client.Address}}</td>
                  </tr>
                  <tr>
                    <th> الهاتف:  </th>
@@ -145,7 +145,7 @@
                  </tr>
                  <tr>
                    <th> الهاتف2:  </th>
-                   <td>{{OrderList[index0].Client.Tel2}}</td>
+                   <td>{{OrderList[index].Client.Tel2}}</td>
                  </tr>
                  <tr>
                    <th> فاكس:  </th>
@@ -415,56 +415,52 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">الزيون</h4>
+        <h4 class="modal-title">الزبون</h4>
       </div>
       <div class="modal-body">
         <form class="form-horizontal">
         <div class="form-group">
           <label for="item" class="col-sm-1 col-xs-2 control-label pull-left">الاسم:</label>
           <div class="col-sm-8 pull-left">
-            <input type="text" class="form-control input-sm" id="item" ng-model="Order.Client.Name" placeholder=""  >
+            <input type="text" class="form-control input-sm" id="item" ng-model="selectedOrder.Client.Name" placeholder=""  >
           </div>
         </div>
         <div class="form-group">
           <label for="address" class="col-sm-1 col-xs-2 control-label pull-left">العنوان:</label>
           <div class="col-sm-8 pull-left">
-            <input type="text" class="form-control input-sm" id="address" ng-model="Order.Client.Address" placeholder=""  >
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="date" class="col-sm-1 col-xs-2 control-label pull-left"> التاريخ:</label>
-          <div class="col-sm-8 pull-left">
-            <input type="date" class="form-control input-sm" id="date" ng-model="Order.date" placeholder=""  >
+            <input type="text" class="form-control input-sm" id="address" ng-model="selectedOrder.Client.Address" placeholder=""  >
           </div>
         </div>
         <div class="form-group">
           <label for="tel1" class="col-sm-1 col-xs-2 control-label pull-left">الهاتف1:</label>
           <div class="col-sm-8 pull-left">
-            <input type="text" class="form-control input-sm" id="tel1" ng-model="Order.Client.Tel1" placeholder=""  >
+            <input type="text" class="form-control input-sm" id="tel1" ng-model="selectedOrder.Client.Tel1" placeholder=""  >
           </div>
         </div>
         <div class="form-group">
           <label for="tel2" class="col-sm-1 col-xs-2 control-label pull-left">الهاتف2:</label>
           <div class="col-sm-8 pull-left">
-            <input type="text" class="form-control input-sm" id="tel2" ng-model="Order.Client.Tel2" placeholder=""  >
+            <input type="text" class="form-control input-sm" id="tel2" ng-model="selectedOrder.Client.Tel2" placeholder=""  >
           </div>
         </div>
         <div class="form-group">
           <label for="fax" class="col-sm-1 col-xs-2 control-label pull-left">الفاكس:</label>
           <div class="col-sm-8 pull-left">
-            <input type="text" class="form-control input-sm" id="fax" ng-model="Order.Client.Fax" placeholder=""  >
+            <input type="text" class="form-control input-sm" id="fax" ng-model="selectedOrder.Client.Fax" placeholder=""  >
           </div>
         </div>
         <div class="form-group">
           <label for="email" class="col-sm-1 col-xs-2 control-label pull-left">البريد الالكتروني:</label>
           <div class="col-sm-8 pull-left">
-            <input type="email" class="form-control input-sm" id="email" ng-model="Order.Client.Email" placeholder=""  >
+            <input type="email" class="form-control input-sm" id="email" ng-model="selectedOrder.Client.Email" placeholder=""  >
           </div>
         </div>
       </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-praimary" ng-click=EditClient(selectedOrder.Client) data-dismiss="modal">اضف العينة</button>
+
       </div>
     </div>
 

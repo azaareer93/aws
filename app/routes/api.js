@@ -2,6 +2,7 @@ var path             = require('path');
 var User       = require("../models/User");
 var Notifications = require("../models/Notifications");
 var Orders = require("../models/Orders");
+var Client = require("../models/Client");
 var config       = require("../config");
 var roles       = require("../roles");
 var jwt        = require('jsonwebtoken');
@@ -44,16 +45,33 @@ module.exports = function(router) {
           });
       });
 
+  router.get('/clients/',function(req,res){
+    Client.find({}).then(function (clients,err) {
+            res.json({success:true, clients:clients});
+          }).catch(err=>{
+            res.json({success:false, message:'erro with getting clients'});
+          });
+      });
+
   router.post('/orders/',function(req,res){
         var order = new Orders(req.body);
-        order.save().then(function (order, err) {
-          if (err) {
-            res.json({success:false, message:err});
-          }else {
-            res.json({success:true, order:order, message:"order was saved"})
+        var client = new Client(req.body.Client);
+        client.save().then(function (client,err) {
+          if (client) {
+            order.ClientId = client._id
           }
-
-        })
+          order.save().then(function (order, err) {
+            if (err) {
+              res.json({success:false, message:err});
+            }else {
+              res.json({success:true, order:order, message:"order was saved"})
+            }
+          }).catch(function (err) {
+            res.json({success:false , err:err});
+          });
+        }).catch(function (err) {
+          res.json({success:false , err:err});
+        });
     });
 
     router.put('/orders/status/',function(req,res){
@@ -77,19 +95,38 @@ module.exports = function(router) {
        });
       });
 
-      router.put('/orders/delete-items/',function(req,res){
-        var id = req.body.orderId;
-        var itemId = req.body.itemId;
-        Orders.findOneAndUpdate({_id:id},{$pull:{Items:{_id:itemId}}},{new: true}).then(function(order) {
-           res.json({success:true, order:order, message:"item was deleted successfuly"});
+      router.put('/orders/client/',function(req,res){
+        var client = req.body;
+        Client.findOneAndUpdate({_id:client._id},{
+          $set:{
+            Name:client.Name,
+            Address:client.Address,
+            Tel1:client.Tel1,
+            Tel2:client.Tel2,
+            Fax:client.Fax,
+            Email:client.Email,
+        }},{new: true}).then(function(client) {
+          console.log(client);
+           res.json({success:true, client:client, message:"client was updated successfuly"});
          }).catch(function (err) {
            res.json({success:false , err:err});
          });
         });
 
+        router.put('/orders/delete-items/',function(req,res){
+          var id = req.body.orderId;
+          var itemId = req.body.itemId;
+          Orders.findOneAndUpdate({_id:id},{$pull:{Items:{_id:itemId}}},{new: true}).then(function(order) {
+             res.json({success:true, order:order, message:"item was deleted successfuly"});
+           }).catch(function (err) {
+             res.json({success:false , err:err});
+           });
+          });
+
       router.put('/orders/put-items/',function(req,res){
         var id = req.body.orderId;
         var item = req.body.item;
+
         if(item._id){
         Orders.update({"Items._id":item._id},{$set:{"Items.$":item}},{new: true}).then(function(order) {
            res.json({success:true, order:order, message:"item was updated successfuly"});

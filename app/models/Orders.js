@@ -27,31 +27,9 @@ mongoose.Promise = global.Promise;
       type:String,
       default:null
     },
-    Client:{
-      Name:{
-        type:String,
-        default:null
-      },
-      Address:{
-        type:String,
-        default:null
-      },
-      Tel1:{
-        type:String,
-        default:null
-      },
-      Tel2:{
-        type:String,
-        default:null
-      },
-      Fax:{
-        type:String,
-        default:null
-      },
-      Email:{
-        type:String,
-        default:null
-      }
+    ClientId:{
+      type:String,
+      default:null
     },
     Items:[{
         Name:{

@@ -35,6 +35,18 @@ angular.module('MainController', ['AuthServices', 'queryService'])
         }).catch(function(err) {
           console.log(err);
         });
+
+        qService.query("GET", "/api/clients/").then(function(data) {
+          if (data.data.success) {
+            for(var i = 0 ; i< $scope.OrderList.length; i++){
+              for (var j = 0; j < data.data.clients.length; j++) {
+                if($scope.OrderList[i].ClientId==data.data.clients[j]._id){
+                  $scope.OrderList[i].Client = data.data.clients[j];
+                }
+              }
+            }
+          }
+        });
       };
 
       $scope.selectOrder = function (orderIndex){
@@ -244,7 +256,7 @@ angular.module('MainController', ['AuthServices', 'queryService'])
       }).catch(function(err) {
       console.log(err);
     });
-    $scope.item = null
+    $scope.item = {}
     }
 
     $scope.PutItemToEdit = function (item) {
@@ -270,8 +282,23 @@ angular.module('MainController', ['AuthServices', 'queryService'])
       }).catch(function(err) {
       console.log(err);
     });
-    $scope.item = null
+    $scope.item = {}
     }
+
+    $scope.EditClient = function (client) {
+      qService.query('PUT','/api/orders/client/',client,null).then(function(data){
+      if(!data.data.success){
+        toastr.error(data.data.message);
+        }else {
+          toastr.success(data.data.message);
+          $scope.selectedOrder = data.data.client;
+        }
+      }).catch(function(err) {
+      console.log(err);
+    });
+    }
+    
+
     scrollDown = function (id) {
       var scroller = document.getElementById(id);
       scroller.scrollTop =  scroller.scrollHeight + 100;

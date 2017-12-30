@@ -18,6 +18,7 @@ angular.module('MainController', ['AuthServices', 'queryService'])
           $scope.UserName = data.data.UserName;
         });
       }else {
+        Auth.Logout();
         $location.path('/login'); // Redirect to home page
       }
 
@@ -29,13 +30,16 @@ angular.module('MainController', ['AuthServices', 'queryService'])
             $scope.selectedOrder = $scope.OrderList[$scope.index]
             $scope.CalculatePayments(1);
             $scope.OrderPaymentStatus(1);
+            $scope.assignClients();
           } else {
             $scope.orderList  = null;
           }
         }).catch(function(err) {
           console.log(err);
         });
+      };
 
+      $scope.assignClients = function () {
         qService.query("GET", "/api/clients/").then(function(data) {
           if (data.data.success) {
             for(var i = 0 ; i< $scope.OrderList.length; i++){
@@ -47,8 +51,7 @@ angular.module('MainController', ['AuthServices', 'queryService'])
             }
           }
         });
-      };
-
+      }
       $scope.selectOrder = function (orderIndex){
         $scope.index = orderIndex;
         $scope.selectedOrder = $scope.OrderList[orderIndex];
@@ -155,6 +158,7 @@ angular.module('MainController', ['AuthServices', 'queryService'])
         }
       }
       if(action==2){
+        console.log($scope.selectedOrder);
         var total = 0;
         for(var i = 0; i < $scope.selectedOrder.Payments.length; i++){
             var payment =  $scope.selectedOrder.Payments[i].Ammount;
@@ -297,7 +301,7 @@ angular.module('MainController', ['AuthServices', 'queryService'])
       console.log(err);
     });
     }
-    
+
 
     scrollDown = function (id) {
       var scroller = document.getElementById(id);

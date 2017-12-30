@@ -13,6 +13,8 @@ angular.module('OrderController', ['AuthServices', 'queryService'])
           $location.path('/'); // Redirect to home page
           $scope.loadme = true; // Allow loading of page
         }
+        $scope.getclients();
+        $scope.Order.date = new Date();
         $scope.loadme = true;
         $scope.UserName = data.data.UserName;
       });
@@ -20,6 +22,27 @@ angular.module('OrderController', ['AuthServices', 'queryService'])
       $location.path('/login'); // Redirect to home page
     }
 
+    $scope.getclients = function () {
+    qService.query("GET", "/api/clients/").then(function(data) {
+      if (data.data.success) {
+        $scope.ClientList = data.data.clients;
+      }
+      }).catch(function(err) {
+        toastr.error(data.data.message);
+      });
+    };
+
+    $scope.chooseClient = function (client) {
+      $scope.isClientSelected = true;
+      $scope.selectedClient = client;
+      $scope.Order.ClientId = client._id;
+      $scope.Order.Client = null;
+    };
+
+    $scope.clearClient = function (client) {
+      $scope.isClientSelected = false;
+      $scope.selectedClient = null;
+    };
 
     $scope.addItem = function (item) {
       $scope.Order.Items.push(item)

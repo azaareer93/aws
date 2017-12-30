@@ -65,7 +65,7 @@
       <div class="orders well" >
         <div class="order-data"
          ng-class="{true: 'active'}[$index ==  index]"
-          ng-repeat="Order in OrderList | orderBy:'date'" ng-cloak>
+          ng-repeat="Order in OrderList" ng-cloak>
           <div class="order-link" ng-click=selectOrder($index)>
             <div class="order-number"> رقم الطلب: {{$index+1}} </div>
             <small class="order-date">{{Order.date | date : 'EEE, d/MMM/y'}}</small>
@@ -129,27 +129,27 @@
                <tbody>
                  <tr>
                   <th>الاسم: </th>
-                  <td>{{OrderList[index].Client.Name}}</td>
+                  <td>{{selectedOrder.Client.Name}}</td>
                 </tr>
                  <tr>
                    <th>البريد الالكتروني: </th>
-                   <td>{{OrderList[index].Client.Email}}</td>
+                   <td>{{selectedOrder.Client.Email}}</td>
                  </tr>
                  <tr>
                    <th>العنوان: </th>
-                   <td>{{OrderList[index].Client.Address}}</td>
+                   <td>{{selectedOrder.Client.Address}}</td>
                  </tr>
                  <tr>
                    <th> الهاتف:  </th>
-                   <td>{{OrderList[index].Client.Tel1}}</td>
+                   <td>{{selectedOrder.Client.Tel1}}</td>
                  </tr>
                  <tr>
                    <th> الهاتف2:  </th>
-                   <td>{{OrderList[index].Client.Tel2}}</td>
+                   <td>{{selectedOrder.Client.Tel2}}</td>
                  </tr>
                  <tr>
                    <th> فاكس:  </th>
-                   <td>{{OrderList[index].Client.Fax}}</td>
+                   <td>{{selectedOrder.Client.Fax}}</td>
                  </tr>
                <tbody>
              </table>
@@ -201,7 +201,7 @@
              <tbody>
                <tr>
                  <th> السعر الكلي: </th>
-                 <td>{{OrderList[index].TotalPrice}}</td>
+                 <td>{{selectedOrder.TotalPrice}}</td>
                </tr>
                <tr>
                  <th>
@@ -459,7 +459,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-praimary" ng-click=EditClient(selectedOrder.Client) data-dismiss="modal">اضف العينة</button>
+        <button type="button" class="btn btn-praimary" ng-click=EditClient(selectedOrder.Client) data-dismiss="modal"> حفظ </button>
 
       </div>
     </div>

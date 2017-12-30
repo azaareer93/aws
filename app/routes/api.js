@@ -38,7 +38,7 @@ module.exports = function(router) {
 });
 
   router.get('/orders/',function(req,res){
-         Orders.find({}).sort({date:1}).then(function (orders) {
+         Orders.find({}).sort('-date').then(function (orders) {
             res.json({success:true, orders:orders});
           }).catch(err=>{
             res.json({success:false, message:'erro with getting orders'});
@@ -55,11 +55,25 @@ module.exports = function(router) {
 
   router.post('/orders/',function(req,res){
         var order = new Orders(req.body);
-        var client = new Client(req.body.Client);
-        client.save().then(function (client,err) {
-          if (client) {
-            order.ClientId = client._id
-          }
+        if(req.body.Client){
+          newClient = new Client(req.body.Client);
+          newClient.save().then(function (client,err) {
+            if (client) {
+              order.ClientId = client._id
+            }
+            order.save().then(function (order, err) {
+              if (err) {
+                res.json({success:false, message:err});
+              }else {
+                res.json({success:true, order:order, message:"order was saved"})
+              }
+            }).catch(function (err) {
+              res.json({success:false , err:err});
+            });
+          }).catch(function (err) {
+            res.json({success:false , err:err});
+          });
+        }else{
           order.save().then(function (order, err) {
             if (err) {
               res.json({success:false, message:err});
@@ -69,9 +83,7 @@ module.exports = function(router) {
           }).catch(function (err) {
             res.json({success:false , err:err});
           });
-        }).catch(function (err) {
-          res.json({success:false , err:err});
-        });
+        }
     });
 
     router.put('/orders/status/',function(req,res){

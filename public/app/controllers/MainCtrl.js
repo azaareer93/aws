@@ -295,7 +295,8 @@ angular.module('MainController', ['AuthServices', 'queryService'])
         toastr.error(data.data.message);
         }else {
           toastr.success(data.data.message);
-          $scope.selectedOrder = data.data.client;
+          console.log(data.data.client);
+          $scope.selectedOrder.Client = data.data.client;
         }
       }).catch(function(err) {
       console.log(err);

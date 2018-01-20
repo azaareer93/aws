@@ -5,6 +5,23 @@ var Promise          = require('mpromise');
 mongoose.Promise = global.Promise;
 
  var OrderSchema = new Schema({
+   SerialNumber:{
+       type:String,
+       unique: true,
+       null:false,
+       min:00000,
+       validate: {
+         validator: function(v) {
+           return /\d{4}/.test(v);
+         },
+         message: '{VALUE} is not a valid phone number!'
+       },
+       required: [true, 'User phone number required']
+     },
+   TotalPrice:{
+       type:Number,
+       default:0
+     },
     TotalPrice:{
       type:Number,
       default:0

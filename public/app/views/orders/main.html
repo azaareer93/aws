@@ -9,14 +9,11 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="#">طلبات</a>
   </div>
 
 <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     <ul class="nav navbar-nav">
-      <li ><a href="#"><span class="glyphicon glyphicon-menu-hamburger"></span>
-      <li ><a href="#"><span class="glyphicon glyphicon-sort-by-attributes"></span>
       <li ><a href="/new" ><span class="glyphicon glyphicon-plus"></span>
       </a></li>
       <li ><a href="" ng-click="Logout()"><span class="glyphicon glyphicon-off"></span>
@@ -42,8 +39,8 @@
       </li>
       <li>
         <a>
-          <b> رقم الطلب: #{{index+1}}
-          <sub>{{selectedOrder.date | date : 'd/MM/y'}}</sub>
+          <b> رقم الطلب: #{{selectedOrder.SerialNumber}}
+          <sub  >{{selectedOrder.date | date : 'd/MM/y'}}</sub>
         </b>
         </a>
       </li>
@@ -54,6 +51,10 @@
         </b>
         </a>
       </li>
+      <li>
+        <a class="navbar-brand" href="#">AWS</a>
+      </li>
+
     </ul>
   </div><!-- /.navbar-collapse -->
 </div><!-- /.container-fluid -->
@@ -62,14 +63,31 @@
 <div class="container ">
   <div class="row">
     <div class="col-md-3">
+      <div class="search well">
+        <input type="text" ng-model="search" class="form-control" placeholder="اكتب للبحث بالطلبات .."  />
+            <div class="btn-group btn-group-sm sorting-group">
+                <button class="btn" ng-click="sort('SerialNumber')">الرقم
+                  <span class="glyphicon sort-icon" ng-show="sortBy=='SerialNumber'" ng-class="{'glyphicon-sort-by-order':reverse,'glyphicon-sort-by-order-alt':!reverse}"></span>
+                </button>
+                <button class="btn" ng-click="sort('date')">التاريخ
+                  <span class="glyphicon sort-icon" ng-show="sortBy=='date'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                </button>
+                <button class="btn" ng-click="sort('ClientId')">الزبون
+                  <span class="glyphicon sort-icon" ng-show="sortBy=='ClientId'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                </button>
+                <button class="btn" ng-click="sort('TotalPrice')">السعر
+                  <span class="glyphicon sort-icon" ng-show="sortBy=='TotalPrice'" ng-class="{'glyphicon-sort-by-order':reverse,'glyphicon-sort-by-order-alt':!reverse}"></span>
+                </button>
+            </div>
+      </div>
       <div class="orders well" >
         <div class="order-data"
-         ng-class="{true: 'active'}[$index ==  index]"
-          ng-repeat="Order in OrderList" ng-cloak>
-          <div class="order-link" ng-click=selectOrder($index)>
-            <div class="order-number"> رقم الطلب: {{$index+1}} </div>
+         ng-repeat="Order in OrderList|orderBy:sortBy:!reverse|filter:search"
+         ng-class="{true: 'active'}[selectedOrder._id == Order._id]" ng-cloak>
+          <div class="order-link" ng-click=selectOrder(Order._id)>
+            <div class="order-number"> رقم الطلب: {{Order.SerialNumber}} </div>
             <small class="order-date">{{Order.date | date : 'EEE, d/MMM/y'}}</small>
-            <div class="">
+            <div>
               <span class="label label-success" ng-if="Order.Status==3">مكتمل</span>
               <span class="label label-warning" ng-if="Order.Status==2">قيد التنفيذ</span>
               <span class="label label-danger" ng-if="Order.Status==1">لم يبدأ</span>
@@ -95,7 +113,7 @@
            <div class="panel-body">
              <table class="table item-table">
                <tbody>
-                 <tr ng-if="OrderList[index].Items.length>0" ng-repeat="item in OrderList[index].Items">
+                 <tr ng-if="selectedOrder.Items.length>0" ng-repeat="item in selectedOrder.Items">
                   <th>#{{$index+1}}</th>
                   <td>{{item.Name}}</td>
                   <td>
@@ -113,6 +131,9 @@
                        </div>
                    </td>
                 </tr>
+                <tr ng-if="selectedOrder.Items.length==0">
+                  <td> لا يوجد عينات في هذا الطلب</td>
+                </tr>
               </tbody>
             </table>
            </div>
@@ -126,7 +147,7 @@
           </div>
            <div class="panel-body">
              <table class="table item-table">
-               <tbody>
+               <tbody ng-if=selectedOrder.Client>
                  <tr>
                   <th>الاسم: </th>
                   <td>{{selectedOrder.Client.Name}}</td>
@@ -152,6 +173,13 @@
                    <td>{{selectedOrder.Client.Fax}}</td>
                  </tr>
                <tbody>
+                  <tbody ng-if=!selectedOrder.Client>
+                    <tr>
+                      <td>
+                        لا يوجد زبون لهذا الطلب
+                      </td>
+                    </tr>
+                  </tbody>
              </table>
            </div>
         </div>
@@ -196,33 +224,64 @@
          <div class="panel-heading">
           <strong> السعر </strong>
        </div>
-         <div class="panel-body">
+         <div class="panel-body table-responsive">
            <table class="table pricing-table">
              <tbody>
                <tr>
                  <th> السعر الكلي: </th>
-                 <td>{{selectedOrder.TotalPrice}}</td>
-               </tr>
-               <tr>
-                 <th>
-                 الدفعات:
-                 </th>
-                 <td ng-if="selectedOrder.Payments.length>0">
-                   <table class="table payment-table" id="payment-table">
-                   <tbody class="payment-body" id="payment-body">
-                     <tr  ng-repeat="payment in selectedOrder.Payments track by $index" ng-cloak>
-                       <td>{{payment.PaymentDate | date : 'd/MM/y'}}</td>
-                       <td>{{payment.Ammount}}</td>
-                     </tr>
-                   </tbody>
-                 </table>
+                 <td ng-if="!PriceEditMode">{{selectedOrder.TotalPrice}}
                  </td>
-                 <td ng-if="selectedOrder.Payments.length==0">
-                    --
+                 <td ng-if="PriceEditMode">
+                   <input type="number"
+                    class="form-control input-sm"
+                     id="PriceToEdit"
+                      min={{selectedOrder.TotalPayments}}
+                      ng-model="selectedOrder.TotalPrice"
+                      ng-init="selectedOrder.TotalPrice"
+                      placeholder="">
+
                  </td>
+
+                 <td ng-if="!PriceEditMode">
+                   <button class="btn btn-sm btn-warning" ng-click="EditPrice()">
+                     <span class="glyphicon glyphicon-edit">
+                     </span>
+                   </button>
+                </td>
+                <td ng-if="PriceEditMode">
+                   <button class="btn btn-sm btn-success" ng-click="SavePrice(selectedOrder._id,selectedOrder.TotalPrice)">
+                     <span class="glyphicon glyphicon-ok">
+                     </span>
+                   </button>
+                </td>
                </tr>
              </tbody>
            </table>
+          <table class="table pricing-table">
+            <tr>
+              <th>
+              الدفعات:
+              </th>
+              <td ng-if="selectedOrder.Payments.length>0">
+                <table class="table payment-table" id="payment-table ">
+                <tbody class="payment-body" id="payment-body">
+                  <tr ng-repeat="payment in selectedOrder.Payments track by $index" ng-cloak>
+                    <td>{{payment.PaymentDate | date : 'd/MM/y'}}</td>
+                    <td>{{payment.Ammount}}</td>
+                    <td>
+                      <button class="btn btn-danger btn-sm" ng-click=removePayment(payment._id)>
+                       <span class="glyphicon glyphicon-trash"></span>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              </td>
+              <td ng-if="selectedOrder.Payments.length==0">
+                 --
+              </td>
+            </tr>
+          </table>
          </div>
           <div class="panel-footer">
             <table class="table item-table">
@@ -252,7 +311,6 @@
     </div>
   <div class="well">
     <h4>معلومات للزبون</h4>
-    <hr>
     <button type="button" class="btn btn-primary btn-block" name="button">
       مراجعة المعلومات
       <span class="glyphicon glyphicon-search pull-right"></span>
@@ -261,7 +319,6 @@
       بريد بالمعلومات للزبون
       <span class="glyphicon glyphicon-envelope pull-right"></span>
     </button>
-    <hr>
     <button type="button" class="btn btn-default btn-block" name="button">
       معلومات اخرى
       <span class="glyphicon glyphicon-plus pull-right"></span>
@@ -270,15 +327,15 @@
     </div>
     <div class="col-md-3">
       <div class="well file-list">
-        <div class="empty" ng-show="OrderList[index].files.length==0"  ng-cloak>
+        <div class="empty" ng-show="selectedOrder.files.length==0"  ng-cloak>
           <span class="glyphicon glyphicon-file"></span>
           <h4>الملفات</h4>
           <p>لم يتم تحميل اي ملف.</p>
         </div>
-        <div ng-show="OrderList[index].files.length>0"  ng-cloak>
-          <table class="table item-table">
+        <div ng-show="selectedOrder.files.length>0"  ng-cloak>
+          <table class="table item-table file-table">
             <tbody>
-              <tr ng-repeat="file in OrderList[index].files track by $index" >
+              <tr ng-repeat="file in selectedOrder.files track by $index" >
                <th>#{{$index+1}}</th>
                <td><a href=../../../uploads/{{file.fileName}} target="_blank">{{file.fileName}}</a></td>
              </tr>

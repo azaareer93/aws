@@ -28,7 +28,7 @@
 }
 
 .orders{
-  max-height: 495px;
+  max-height: 415px;
    overflow-y:scroll;
 
 }
@@ -78,13 +78,15 @@ font-weight: bold;
       text-align: center;
       vertical-align: middle;
       padding: 3px;
-      max-width: 120px;
 }
 
 th{
   text-align: right !important;
 }
-
+.file-table>tbody>tr>td{
+  white-space:nowrap;
+  max-width: 185px;
+}
 .panel-heading .glyphicon{
   color:#337ab7;
   float: left;
@@ -94,12 +96,13 @@ th{
   border-top: 1;
   padding: 0;
 }
-.item-table, .pricing-table, .payment-table{
+.item-table, .pricing-table{
   margin: 0;
 
-
 }
-
+.payment-table{
+  margin: 0;
+}
 .payment-table>tbody>tr>th, .payment-table>tbody>tr>td{
   border-top: none;
 
@@ -107,7 +110,10 @@ th{
 .payment-body{
   display: block;
   max-height: 100px;
-  overflow-y: auto;
+  overflow-y: scroll;
+}
+.navbar-right{
+  padding-right: 0px;
 }
 
 .file-list{
@@ -164,7 +170,15 @@ th{
 .hidden{
   display: none;
 }
-
+.sorting-group{
+  display: table;
+   margin: 4px auto 0 auto;
+}
+.search {
+  margin-bottom: 4px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
 td{
   overflow: hidden;
   text-overflow: ellipsis;
@@ -172,5 +186,5 @@ td{
 
 .size-table>tbody>tr>td, .size-table>thead>tr>th{
   padding: 2px;
-  
+
 }

@@ -2,7 +2,6 @@ angular.module('OrderController', ['AuthServices', 'queryService'])
   .controller('OrderCtrl', function($scope, $location,Auth, qService, toastr) {
     $scope.Order = {}
     $scope.Order.Items=[]
-
     if (Auth.isLoggedIn()) {
       // Check if a the token expired
       Auth.getUser().then(function(data) {
@@ -50,7 +49,6 @@ angular.module('OrderController', ['AuthServices', 'queryService'])
     }
 
     $scope.deleteItem= function (itemIndex) {
-      console.log(itemIndex);
       $scope.Order.Items.splice(itemIndex,1);
     }
 

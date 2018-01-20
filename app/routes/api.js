@@ -29,10 +29,10 @@ module.exports = function(router) {
         console.log(req.body);
         var user = new User(req.body);
         user.save().then(function (doc) {
-              res.json({success:true, message:'User registred successfully.'});
+              res.json({success:true, message:'تم اضافة المستخدم'});
         }).catch(err=>{
           console.log(err);
-          res.json({success:false,message:'User was not registred'});
+          res.json({success:false,message:'خطأ في تسجيل المستخدم'});
 
         });
 });
@@ -41,7 +41,7 @@ module.exports = function(router) {
          Orders.find({}).sort('-date').then(function (orders) {
             res.json({success:true, orders:orders});
           }).catch(err=>{
-            res.json({success:false, message:'erro with getting orders'});
+            res.json({success:false, message:'خطأ في الحصول على الطلبات'});
           });
       });
 
@@ -49,7 +49,7 @@ module.exports = function(router) {
     Client.find({}).then(function (clients,err) {
             res.json({success:true, clients:clients});
           }).catch(err=>{
-            res.json({success:false, message:'erro with getting clients'});
+            res.json({success:false, message:'خطأ في الحصول على الزبائن'});
           });
       });
 
@@ -63,25 +63,25 @@ module.exports = function(router) {
             }
             order.save().then(function (order, err) {
               if (err) {
-                res.json({success:false, message:err});
+                res.json({success:false,  message:"لم يتم حفظ الطلب"});
               }else {
-                res.json({success:true, order:order, message:"order was saved"})
+                res.json({success:true, order:order, message:"تم حفظ الطلب"})
               }
             }).catch(function (err) {
-              res.json({success:false , err:err});
+              res.json({success:false , err:"لم يتم حفظ الطل"});
             });
           }).catch(function (err) {
-            res.json({success:false , err:err});
+            res.json({success:false , err:err,  message:"لم يتم حفظ الطلب"});
           });
         }else{
           order.save().then(function (order, err) {
             if (err) {
-              res.json({success:false, message:err});
+              res.json({success:false, err:err,  message:"لم يتم حفظ الطلب"});
             }else {
-              res.json({success:true, order:order, message:"order was saved"})
+              res.json({success:true, order:order, message:"تم حفظ الطلب"})
             }
           }).catch(function (err) {
-            res.json({success:false , err:err});
+            res.json({success:false , err:err,  message:"لم يتم حفظ الطلب"});
           });
         }
     });
@@ -89,23 +89,44 @@ module.exports = function(router) {
     router.put('/orders/status/',function(req,res){
       var id = req.body.orderId;
       var status = req.body.Status;
-       Orders.findOneAndUpdate({_id:id},{$set:{Status:status}}).then(function(order) {
-         res.json({success:true, order:order, message:"status was updated"});
+       Orders.findOneAndUpdate({_id:id},{$set:{Status:status}},{new: true}).then(function(order) {
+         res.json({success:true, order:order, message:"تم تعديل حالة الطلب"});
        }).catch(function (err) {
          res.json({success:false , err:err});
        });
 
       });
+
+      router.put('/orders/price/',function(req,res){
+        console.log(req.body);
+        var id = req.body.orderId;
+        var Price = req.body.Price;
+         Orders.findOneAndUpdate({_id:id},{$set:{TotalPrice:Price}},{new: true}).then(function(order) {
+           res.json({success:true, order:order, message:"تم تعديل السعر"});
+         }).catch(function (err) {
+           res.json({success:false , err:err});
+         });
+        });
 
     router.put('/orders/payments/',function(req,res){
       var id = req.body.orderId;
       var Ammount = req.body.Ammount;
       Orders.findOneAndUpdate({_id:id},{$push:{Payments:{Ammount:Ammount}}},{new: true}).then(function(order) {
-         res.json({success:true, order:order, message:"new payment was added"});
+         res.json({success:true, order:order, message:"تم اضافة دفعة جديدة"});
        }).catch(function (err) {
          res.json({success:false , err:err});
        });
       });
+
+      router.put('/orders/delete-payments/',function(req,res){
+        var id = req.body.orderId;
+        var payment_id = req.body.payment_id;
+        Orders.findOneAndUpdate({_id:id},{$pull:{Payments:{_id:payment_id}}},{new: true}).then(function(order) {
+           res.json({success:true, order:order, message:"تم حذف دفعة"});
+         }).catch(function (err) {
+           res.json({success:false , err:err});
+         });
+        });
 
       router.put('/orders/client/',function(req,res){
         var client = req.body;
@@ -118,8 +139,7 @@ module.exports = function(router) {
             Fax:client.Fax,
             Email:client.Email,
         }},{new: true}).then(function(client) {
-          console.log(client);
-           res.json({success:true, client:client, message:"client was updated successfuly"});
+           res.json({success:true, client:client, message:"تم تعديل الزبون بنجاح"});
          }).catch(function (err) {
            res.json({success:false , err:err});
          });
@@ -129,7 +149,7 @@ module.exports = function(router) {
           var id = req.body.orderId;
           var itemId = req.body.itemId;
           Orders.findOneAndUpdate({_id:id},{$pull:{Items:{_id:itemId}}},{new: true}).then(function(order) {
-             res.json({success:true, order:order, message:"item was deleted successfuly"});
+             res.json({success:true, order:order, message:"تم حذف العينة"});
            }).catch(function (err) {
              res.json({success:false , err:err});
            });
@@ -141,13 +161,13 @@ module.exports = function(router) {
 
         if(item._id){
         Orders.update({"Items._id":item._id},{$set:{"Items.$":item}},{new: true}).then(function(order) {
-           res.json({success:true, order:order, message:"item was updated successfuly"});
+           res.json({success:true, order:order, message:"تم تحديث العينة"});
          }).catch(function (err) {
            res.json({success:false , err:err});
          });
        }else {
          Orders.findOneAndUpdate({_id:id},{$push:{Items:item}},{new: true}).then(function(order) {
-            res.json({success:true, order:order, message:"item was added successfuly"});
+            res.json({success:true, order:order, message:"تم اضافة عينة"});
           }).catch(function (err) {
             res.json({success:false , err:err});
           });
@@ -158,10 +178,10 @@ module.exports = function(router) {
       config.upload(req, res, function (err) {
          if (err) {
             if (err.code ==='filetype') {
-              res.json({success:false, err:err, message:"only image files are Accepted"});
+              res.json({success:false, err:err, message:"فقط ملفات الصور والمستندات"});
             } else {
               console.log(err);
-              res.json({success:false, err:err, message:"file was not uploaded"});
+              res.json({success:false, err:err, message:"خطأ في تحميل الملف"});
             }
          }else{
            var id = req.body.orderId;
@@ -169,7 +189,7 @@ module.exports = function(router) {
               filePath:req.file.path,
               fileSize:req.file.size,
               fileMimetype:req.file.mimetype}}},{new: true}).then(function(order) {
-              res.json({success:true, order:order, message:"file was uploaded"});
+              res.json({success:true, order:order, message:"تم تحميل الملف بنجاح"});
             }).catch(function (err) {
               res.json({success:false , err:err});
             });

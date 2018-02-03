@@ -9,14 +9,6 @@ mongoose.Promise = global.Promise;
        type:String,
        unique: true,
        null:false,
-       min:00000,
-       validate: {
-         validator: function(v) {
-           return /\d{4}/.test(v);
-         },
-         message: '{VALUE} is not a valid phone number!'
-       },
-       required: [true, 'User phone number required']
      },
    TotalPrice:{
        type:Number,
@@ -69,12 +61,12 @@ mongoose.Promise = global.Promise;
           type:String,
           default:null
         },
-        PrintOnChest:{
+        Tshit:{
           type:Boolean,
           default:null
         },
-        PrintOnBack:{
-          type:Boolean,
+        Status:{
+          type:String,
           default:null
         },
         Note:{
@@ -163,5 +155,21 @@ mongoose.Promise = global.Promise;
     }]
 });
 
+OrderSchema.pre('save', function(next) {
+  var order = this;
+    order.SerialNumber=generate(order._id);
+    next();
+});
+
+
+var generate = function(string) {
+var ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+var ID_LENGTH = 5;
+var rtn = '';
+for (var i = 0; i < ID_LENGTH; i++) {
+  rtn += ALPHABET.charAt(Math.floor(Math.random() * ALPHABET.length));
+}
+return rtn.toLowerCase();
+}
 
 module.exports=mongoose.model('Orders',OrderSchema);

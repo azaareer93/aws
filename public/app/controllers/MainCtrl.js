@@ -1,4 +1,4 @@
-angular.module('MainController', ['AuthServices', 'queryService'])
+angular.module('MainController', ['AuthServices', 'queryService', 'angularUtils.directives.dirPagination'])
   .controller('MainCtrl', function($scope, $filter, $window, $location, $interval, $timeout, toastr, Auth, qService) {
     // for post e.g.
     // qService.query('POST',"/api/orders/",OrderDate).then...etc
@@ -15,7 +15,9 @@ angular.module('MainController', ['AuthServices', 'queryService'])
         }
         $scope.getOrders();
         $scope.loadme = true;
-        $scope.UserName = data.data.UserName;
+        $scope.User = data.data;
+        $scope.ProcessCurrentRout();
+
       });
     } else {
       Auth.Logout();
@@ -26,7 +28,7 @@ angular.module('MainController', ['AuthServices', 'queryService'])
       qService.query("GET", "/api/orders/").then(function(res) {
         if (res.data.success) {
           $scope.OrderList = res.data.orders;
-          $scope.selectedOrder = $scope.OrderList[0]
+          $scope.selectedOrder = $scope.OrderList[$scope.OrderList.length-1]
           $scope.CalculatePayments(1);
           $scope.OrderPaymentStatus(1);
           $scope.assignClients();
@@ -37,6 +39,52 @@ angular.module('MainController', ['AuthServices', 'queryService'])
         console.log(err);
       });
     };
+
+    $scope.getUsers = function() {
+      qService.query("GET", "/api/users/").then(function(res) {
+        if (res.data.success) {
+          $scope.Users = res.data.users;
+        } else {
+          $scope.Users = null;
+        }
+      }).catch(function(err) {
+        toastr.error("تأكد من صحة البيانات المدخلة");
+      });
+    };
+
+    $scope.saveUsers = function(user) {
+      if(user){
+      if(user.Password != user.conPassword | user.Password == null){
+        toastr.error("خطأ في كلمة المرور");
+        return 0
+      }
+      qService.query("POST", "/api/users/",user,null).then(function(res) {
+        console.log(res.data);
+        if (res.data.success) {
+          $scope.Users.push(res.data.user);
+          toastr.success(res.data.message);
+        }else {
+          toastr.error("تأكد من صحة البيانات المدخلة");
+        }
+      }).catch(function(err) {
+      });
+      }
+    };
+
+
+    $scope.getLogs = function() {
+      qService.query("GET", "/api/logs/").then(function(res) {
+        console.log(res.data);
+        if (res.data.success) {
+          $scope.Logs = res.data.logs;
+        } else {
+          $scope.Logs = null;
+        }
+      }).catch(function(err) {
+        toastr.error("تأكد من صحة البيانات المدخلة");
+      });
+    };
+
 
     $scope.assignClients = function() {
       qService.query("GET", "/api/clients/").then(function(data) {
@@ -65,9 +113,27 @@ angular.module('MainController', ['AuthServices', 'queryService'])
       $scope.reverse = !$scope.reverse; //if true make it false and vice versa
     }
 
+    $scope.sortu = function(keyname) {
+      $scope.sortByu = keyname; //set the sortBy to the param passed
+      $scope.reverse1 = !$scope.reverse1; //if true make it false and vice versa
+    }
+
+    $scope.printDiv = function(divName) {
+    var printContents = document.getElementById(divName).innerHTML;
+    var popupWin = window.open('', '_blank', 'width=300,height=300');
+    popupWin.document.open();
+    popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css" /> <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-rtl.css" /> <link rel="stylesheet" type="text/css" href="assets/css/style.css" /></head><body onload="window.print()">' + printContents + '</body></html>');
+    popupWin.document.close();
+  }
+
     $scope.viewItem = function(item) {
       $scope.ItemToView = item;
       console.log($scope.ItemToView);
+    }
+
+    $scope.ChangeitemStatus = function(item, itemStatus) {
+        item.Status = itemStatus
+        $scope.EditItem (item);
     }
 
     $scope.fileChaned = function() {
@@ -149,7 +215,7 @@ angular.module('MainController', ['AuthServices', 'queryService'])
           $scope.selectedOrder.Status = Status
         }
       }).catch(function(err) {
-        console.log(err);
+        toastr.error("تأكد من صحة البيانات المدخلة");
       });
     }
 
@@ -222,7 +288,7 @@ angular.module('MainController', ['AuthServices', 'queryService'])
           }, 0, false);
 
         }).catch(function(err) {
-          console.log(err);
+          toastr.error("تأكد من صحة البيانات المدخلة");
         });
       }
     }
@@ -232,7 +298,6 @@ angular.module('MainController', ['AuthServices', 'queryService'])
         "orderId": $scope.selectedOrder._id,
         "itemId": itemId
       }
-      console.log(data);
       qService.query('PUT', '/api/orders/delete-items/', data, null).then(function(data) {
         if (!data.data.success) {
           toastr.error(data.data.message);
@@ -245,7 +310,7 @@ angular.module('MainController', ['AuthServices', 'queryService'])
           }
         }
       }).catch(function(err) {
-        console.log(err);
+        toastr.error("تأكد من صحة البيانات المدخلة");
       });
 
     }
@@ -255,7 +320,6 @@ angular.module('MainController', ['AuthServices', 'queryService'])
         "orderId": $scope.selectedOrder._id,
         "payment_id": payment_id
       }
-      console.log(data);
       qService.query('PUT', '/api/orders/delete-payments/', data, null).then(function(data) {
         if (!data.data.success) {
           toastr.error(data.data.message);
@@ -270,7 +334,7 @@ angular.module('MainController', ['AuthServices', 'queryService'])
           $scope.OrderPaymentStatus(2);
         }
       }).catch(function(err) {
-        console.log(err);
+        toastr.error("تأكد من صحة البيانات المدخلة");
       });
 
     }
@@ -292,7 +356,7 @@ angular.module('MainController', ['AuthServices', 'queryService'])
           }
         }
       }).catch(function(err) {
-        console.log(err);
+        toastr.error("تأكد من صحة البيانات المدخلة");
       });
       $scope.item = {}
     }
@@ -311,14 +375,10 @@ angular.module('MainController', ['AuthServices', 'queryService'])
           toastr.error(data.data.message);
         } else {
           toastr.success(data.data.message);
-          if (data.data.order.Items.length == 0) {
-            $scope.selectedOrder.Items = []
-          } else {
-            $scope.selectedOrder.Items = data.data.order.Items
-          }
-        }
+                }
       }).catch(function(err) {
         console.log(err);
+        toastr.error("تأكد من صحة البيانات المدخلة");
       });
       $scope.item = {}
     }
@@ -329,11 +389,10 @@ angular.module('MainController', ['AuthServices', 'queryService'])
           toastr.error(data.data.message);
         } else {
           toastr.success(data.data.message);
-          console.log(data.data.client);
           $scope.selectedOrder.Client = data.data.client;
         }
       }).catch(function(err) {
-        console.log(err);
+        toastr.error("تأكد من صحة البيانات المدخلة");
       });
     }
 
@@ -358,7 +417,7 @@ angular.module('MainController', ['AuthServices', 'queryService'])
         $scope.OrderPaymentStatus(2);
 
       }).catch(function(err) {
-        console.log(err);
+        toastr.error("تأكد من صحة البيانات المدخلة");
       });
     }
 
@@ -403,16 +462,26 @@ angular.module('MainController', ['AuthServices', 'queryService'])
 
     $scope.checkSession();
     // Will run code every time a route changes
+    $scope.ProcessCurrentRout = function() {
+      if ($location.path() == '/users' & $scope.User.Role!="ADMIN") {
+        $location.path('/');
+      }else if ($location.path() == '/users' & $scope.User.Role == "ADMIN") {
+        $scope.getUsers();
+        $scope.getLogs();
+
+      }
+
+    }
+
     $scope.$on('$routeChangeStart', function(event, next, current) {
       $scope.checkSession();
       // Check if user is logged in
       if (Auth.isLoggedIn()) {
         $scope.isLoggedIn = true; // Variable to deactivate ng-show on index
         Auth.getUser().then(function(data) {
-          $scope.UserName = data.data.UserName;
+          $scope.user = data.data;
           //console.log("mian ",data.data);
           $scope.loadme = true;
-          console.log($scope.isLoggedIn);
           if (next.$$route) {
             if (next.$$route.originalPath == '/') {
               $location.path('/');

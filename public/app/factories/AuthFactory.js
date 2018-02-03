@@ -56,7 +56,6 @@ var  AuthFactory = {};
         var token = AuthToken.getToken();
 
         if (token) config.headers['x-access-token'] = token;
-
         return config;
       };
     return AuthInerceptorsFactory;

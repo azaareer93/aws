@@ -100,12 +100,6 @@
       <div class="row">
         <div class="col-md-8">
           <div class="form-group">
-            <label for="price" class="col-sm-1 col-xs-2 control-label pull-left">رقم الطلب</label>
-            <div class="col-sm-6 pull-left">
-              <input type="text" min="0" class="form-control input-sm" id="SerialNumber" ng-model="Order.SerialNumber">
-            </div>
-          </div>
-          <div class="form-group">
             <label for="price" class="col-sm-1 col-xs-2 control-label pull-left">السعر</label>
             <div class="col-sm-6 pull-left">
               <input type="number" min="0" class="form-control input-sm" id="price" ng-model="Order.TotalPrice" ng-init="Order.TotalPrice=0">
@@ -144,8 +138,7 @@
               <th>لون الطباعة</th>
               <th>معلومات اضافية</th>
               <th>الحجم</th>
-              <th>الطباعة على الظهر</th>
-              <th>الطباعة على الوجه</th>
+              <th>بلايز</th>
               <th>الاحجام</th>
               <th>حذف</th>
 
@@ -159,10 +152,9 @@
               <td>{{item.PColor}}</td>
               <td>{{item.Note}}</td>
               <td>{{item.Size}}</td>
-              <td>{{item.PrintOnChest}}</td>
-              <td>{{item.PrintOnBack}}</td>
+              <td>{{item.Tshit}}</td>
               <td>
-                <table class="table table table-striped table-bordered table-hover size-table">
+                <table ng-if="!item.Tshit" class="table table table-striped table-bordered table-hover size-table">
                   <thead>
                     <th>s</th>
                     <th>m</th>
@@ -264,7 +256,7 @@
               <label for="bgcolor">لون الارضية</label>
               <input type="text"class="form-control input-sm" id="bgcolor" ng-model="item.GColor" placeholder="">
             </div>
-            <div class="form-group">
+            <div class="form-group" ng-if="!item.Tshit">
               <label for="bgcolor"> الحجم </label>
               <input type="text"class="form-control input-sm" id="bgcolor" ng-model="item.Size" placeholder="">
             </div>
@@ -280,20 +272,14 @@
             </div>
             <div class="checkbox">
             <label>
-              <input class="pull-right" type="checkbox" ng-model="item.PrintOnChest">
-              <span class="check-box-span"> الطباعة على الوجه </span>
+              <input class="pull-right" type="checkbox" ng-model="item.Tshit">
+              <span class="check-box-span">بلايز </span>
             </label>
           </div>
-          <div class="checkbox">
-          <label>
-            <input class="pull-right" type="checkbox" ng-model="item.PrintOnBack">
-            <span class="check-box-span"> الطباعة على الظهر </span>
-          </label>
-        </div>
           </div>
         </div>
 
-        <div class="row">
+        <div class="row" ng-show="item.Tshit">
           <div class="col-md-2">
             <div class="form-group">
               <label for="pcolor">S</label>
@@ -332,7 +318,7 @@
           </div>
         </div>
 
-        <div class="row">
+        <div class="row" ng-show="item.Tshit">
           <div class="col-md-2">
             <div class="form-group">
               <label for="pcolor">4</label>

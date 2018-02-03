@@ -188,3 +188,7 @@ td{
   padding: 2px;
 
 }
+
+.new-user-form>.form-group>input{
+  width: 150px;
+}

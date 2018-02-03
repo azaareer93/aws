@@ -15,10 +15,16 @@ var ClientSchema = new Schema({
   },
   Tel1:{
     type:String,
+    lowercase:true,
+    required:true,
+    unique:true,
     default:null
   },
   Tel2:{
     type:String,
+    lowercase:true,
+    required:true,
+    unique:true,
     default:null
   },
   Fax:{
@@ -27,6 +33,9 @@ var ClientSchema = new Schema({
   },
   Email:{
     type:String,
+    lowercase:true,
+    required:true,
+    unique:true,
     default:null
   }
   });

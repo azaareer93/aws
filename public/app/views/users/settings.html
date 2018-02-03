@@ -1,0 +1,114 @@
+<nav class="navbar navbar-default top-static-bar">
+  <div class="container-fluid">
+    <div class="col-sm-2">
+      <ul class="nav navbar-nav">
+            <li><a href="/">
+              الرئيسية
+              <i class="glyphicon glyphicon-circle-arrow-left"></i>
+            </a>
+            </li>
+          </ul>
+    </div>
+  </div><!-- /.container-fluid -->
+</nav>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-1"></div>
+    <div class="col-sm-10 well">
+      <div class="col-md-12">
+
+        <form class="form-inline new-user-form">
+              <div class="form-group">
+                <label for="UserName">اسم المستخدم</label>
+                <input type="text" class="form-control" id="UserName" placeholder="UserName" ng-model="user.UserName">
+              </div>
+              <div class="form-group">
+                <label for="Password">كلمة السر</label>
+                <input type="password" class="form-control" id="Password" placeholder="********" ng-model="user.Password">
+              </div>
+              <div class="form-group">
+                <label for="conPassword">تأكيد كلمة السر</label>
+                <input type="password" class="form-control" id="conPassword" placeholder="********" ng-model="user.conPassword">
+              </div>
+              <div class="form-group">
+                <label for="Role">النوع</label>
+                <select class="form-control" id="Role" ng-model="user.Role">
+                    <option value="ADMIN">مسؤول</option>
+                    <option value="GRAPHIC">جرافيك</option>
+                    <option value="SALES">مبيعات</option>
+                    <option value="WORKSHOP">مشغل</option>
+                  </select>
+              </div>
+              <button type="submit" class="btn btn-default" ng-click=saveUsers(user)> اضافة مستخدم جديد</button>
+           </div>
+           <hr/>
+           <hr/>
+           <input type="text" ng-model="search_users" class="form-control" placeholder=" البحث في السجل">
+         <table class="table table-striped table-bordered table-hover table-condensed">
+           <thead>
+               <th ng-click="sortu('UserName')"> اسم المستخدم
+                 <span class="glyphicon sort-icon" ng-show="sortByu=='UserName'" ng-class="{'glyphicon-chevron-up':reverse1,'glyphicon-chevron-down':!reverse1}"></span>
+               </th>
+               <th ng-click="sortu('Role')"> النوع
+                 <span class="glyphicon sort-icon" ng-show="sortByu=='Role'" ng-class="{'glyphicon-chevron-up':reverse1,'glyphicon-chevron-down':!reverse1}"></span>
+               </th>
+
+             </tr>
+           </thead>
+           <tbody>
+             <tr dir-paginate="user in Users|orderBy:sortByu:reverse1|filter:search_users|itemsPerPage:5" pagination-id="user">
+               <td>{{user.UserName}}</td>
+               <td>{{user.Role}}</td>
+             </tr>
+           </tbody>
+         </table>
+         <dir-pagination-controls  dir="ltr"
+            pagination-id="user"
+            max-size="5"
+            direction-links="true"
+            boundary-links="true" >
+          </dir-pagination-controls>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-1"></div>
+    <div class="col-sm-10 well">
+      <div class="col-md-12">
+        <input type="text" ng-model="search_actions" class="form-control" placeholder=" البحث في السجل">
+           </div>
+         <table class="table table-striped table-bordered table-hover table-condensed">
+           <thead>
+               <th ng-click="sort('UserName')"> المستخدم
+                 <span class="glyphicon sort-icon" ng-show="sortBy=='Role'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+               </th>
+               <th ng-click="sort('Date')"> الوقت والتاريخ
+                 <span class="glyphicon sort-icon" ng-show="sortBy=='Date'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+               </th>
+               <th ng-click="sort('Action')"> الحركة
+                 <span class="glyphicon sort-icon" ng-show="sortBy=='Action'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+               </th>
+               <th ng-click="sort('Note')"> ملاحظات
+                 <span class="glyphicon sort-icon" ng-show="sortBy=='Note'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+               </th>
+             </tr>
+           </thead>
+           <tbody>
+             <tr dir-paginate="action in Logs|orderBy:sortBy:reverse|filter:search_actions|itemsPerPage:5 " pagination-id="action">
+               <td>{{action.UserName}}</td>
+               <td>{{action.Date | date:'hh:mm MM/dd/yyyy '}}</td>
+               <td>{{action.Action}}</td>
+               <td>{{action.Note}}</td>
+             </tr>
+           </tbody>
+         </table>
+         <dir-pagination-controls dir="ltr"
+            pagination-id="action"
+            max-size="5"
+            direction-links="true"
+            boundary-links="true" >
+          </dir-pagination-controls>
+    </div>
+  </div>
+</div>

@@ -20,6 +20,11 @@ var app = angular.module('appRoute',['ngRoute'])
             controller: 'MainCtrl',
             isLoggedIn: true
             })
+      .when('/users',{
+            templateUrl:'app/views/users/settings.html',
+            controller: 'MainCtrl',
+            isLoggedIn: true
+            })
       .otherwise({redirectTo:'/'});
 
 });

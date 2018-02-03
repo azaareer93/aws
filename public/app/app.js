@@ -6,7 +6,6 @@ angular.module('myApp',
     'queryService',
     'AuthServices',
     'toastr'
-
   ])
   .config(function($httpProvider,toastrConfig){
     $httpProvider.interceptors.push('AuthInerceptors');

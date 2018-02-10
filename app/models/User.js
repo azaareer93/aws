@@ -52,34 +52,33 @@ var usernameValidator = [
         message: 'Username must contain letters and numbers only'
     })
 ];
-//
-// // Password Validator
-// var passwordValidator = [
-//     validate({
-//         isAsync: true,
-//         validator: 'matches',
-//         arguments: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\d])(?=.*?[\W]).{6,35}$/,
-//         message: 'Password needs to have at least one lower case, one uppercase, one number, one special character, and must be at least 8 characters but no more than 35.'
-//     }),
-//     validate({
-//         isAsync: true,
-//         validator: 'isLength',
-//         arguments: [6, 35],
-//         message: 'Password should be between {ARGS[0]} and {ARGS[1]} characters'
-//     })
-// ];
+
+// Password Validator
+var passwordValidator = [
+    // validate({
+    //     isAsync: true,
+    //     validator: 'matches',
+    //     arguments: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\d])(?=.*?[\W]).{4,35}$/,
+    //     message: 'Password needs to have at least one lower case, one uppercase, one number, one special character, and must be at least 8 characters but no more than 35.'
+    // }),
+    validate({
+        isAsync: true,
+        validator: 'isLength',
+        arguments: [4, 35],
+        message: 'Password should be between {ARGS[0]} and {ARGS[1]} characters'
+    })
+];
 
 
 
 var UserSchema = new Schema({
-  UserName:{ type:String, lowercase:true, required:true, unique:true,validate: usernameValidator},
-  Password:{ type:String, required:true},
+  UserName:{ type: Schema.Types.String, unique:true, lowercase:true, required:true, validate: usernameValidator},
+  Password:{ type:String, required:true,validate: usernameValidator},
   Approved:{type:Boolean, required:true, default:true},
   Role:{ type:String, required:true, default:'ADMIN'},
-
-
-
+  date:{type:Date, default:new Date().toJSON()},
   });
+
 UserSchema.pre('save', function(next) {
   var user = this;
   bcrypt.hash(user.Password, null, null, function(err, hash){

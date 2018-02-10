@@ -10,10 +10,62 @@ var util       = require('util');
 var secret     = 'whatever';
 var mongoose = require('mongoose');
 var date = new Date().toJSON().split('T')[0];
+var bcrypt     = require('bcrypt-nodejs');
 
 
 module.exports = function(router) {
 
+
+  //http://localhost:3000/api/orders/
+  //user Registration Route
+  router.post('/users',function(req,res){
+    var user = new User(req.body);
+    User.findOne({UserName:req.body.UserName}).then(function (doc) {
+      if(doc){
+       res.json({success:false, message:"المستخدم موجود مسبقا"});
+     }else {
+       user.save().then(function (user, err) {
+         saveLog("--- "," مستخدم جديد", user.UserName)
+         res.json({success:true, user:user, message:'تم اضافة المستخدم'});
+       }).catch(function (err) {
+         res.json({success:false , err:err});
+     });
+     }
+    });
+  });
+
+  //user Login Route
+  // http://localhost:3000/api/authenticate
+
+  router.post('/authenticate',function(req,res){
+    //here th check our local costmers
+     User.findOne({UserName:req.body.UserName}).then(function(user){
+       flage=false;
+       message="Invalid username";
+       token = {};
+     if(user){
+       if (req.body.Password) {
+           var ValidPassword = user.comparePassword(req.body.Password);
+           if(ValidPassword){
+             var token = jwt.sign({UserName:user.UserName, Role:user.Role}, secret, { expiresIn: '24h' });
+                flage=true;
+                message="user authenticated";
+                userNameAuthenticated = user.UserName ;
+               res.json({success:flage, message:message, token:token});
+             }else {
+               flage=false;
+               message="invalid password";
+                res.json({success:flage, message:message});
+             }
+           }else {
+             flage=false;
+             message="Password was not provided";
+              res.json({success:flage, message:message});
+           }
+         }
+         res.json({success:flage, message:message});
+     });
+  });
 
   //verfiy token
   router.use(function (req,res,next) {
@@ -32,20 +84,6 @@ module.exports = function(router) {
       }
   });
 
-  //http://localhost:3000/api/orders/
-  //user Registration Route
-  router.post('/users',function(req,res){
-        var user = new User(req.body);
-        user.save().then(function (doc) {
-              saveLog(req.decoded.UserName,"اضافة مستخدم")
-              res.json({success:true, user:user, message:'تم اضافة المستخدم'});
-        }).catch(err=>{
-          console.log(err);
-          res.json({success:false, user:user, message:'خطأ في تسجيل المستخدم'});
-
-        });
-});
-
 var saveLog = function (UserName,Action,Note) {
   console.log();
   var log = new Logs();
@@ -56,12 +94,32 @@ var saveLog = function (UserName,Action,Note) {
 }
 
 router.get('/users',function(req,res){
-  User.find({}).then(function (users) {
+  User.find({}).select({ "Password": 0}).then(function (users) {
        res.json({success:true, users:users});
     },function(err) {
         res.json({success:false, message:"حدث خطأ اثناء العملية"});
     });
-    });
+  });
+
+  router.put('/editUser/',function (req,res) {
+
+    if(req.decoded.Role!="ADMIN"){
+      res.json({success:false , "message": "لا يوجد صلاحية لتعديل المستخدمين"});
+    }
+
+    var id = req.body._id;
+    User.findById(id, function(err, user) {
+    if (err)
+    res.json({success:false , err: err});
+    user.Password = req.body.Password;
+    user.UserName = req.body.UserName;
+    user.Role = req.body.Role;
+    res.json({success:true, user:user, message:"تم تعديل المستخدم "});
+
+  });
+
+  });
+
 
 router.get('/logs',function(req,res){
   Logs.find({}).sort([['Date', 1]]).then(function (logs) {
@@ -112,7 +170,7 @@ router.get('/orders/',function(req,res){
             if (err) {
               res.json({success:false, err:err,  message:"لم يتم حفظ الطلب"});
             }else {
-              saveLog(req.decoded.UserName,"اضافة طلب")
+              saveLog(req.decoded.UserName,"اضافة طلب",order.SerialNumber)
 
               res.json({success:true, order:order, message:"تم حفظ الطلب"})
             }
@@ -126,7 +184,7 @@ router.get('/orders/',function(req,res){
       var id = req.body.orderId;
       var status = req.body.Status;
        Orders.findOneAndUpdate({_id:id},{$set:{Status:status}},{new: true}).then(function(order) {
-         saveLog(req.decoded.UserName," تعديل حالة الطلب")
+         saveLog(req.decoded.UserName," تعديل حالة الطلب",order.SerialNumber)
          res.json({success:true, order:order, message:"تم تعديل حالة الطلب"});
        }).catch(function (err) {
          res.json({success:false , err:err});
@@ -243,41 +301,6 @@ router.get('/orders/',function(req,res){
            }
        });
       });
-
-  //user Login Route
-  // http://localhost:3000/api/authenticate
-
-  router.post('/authenticate',function(req,res){
-    //here th check our local costmers
-     User.findOne({UserName:req.body.UserName}).then(function(user){
-       flage=false;
-       message="Invalid username";
-       token = {};
-     if(user){
-       if (req.body.Password) {
-           var ValidPassword = user.comparePassword(req.body.Password);
-           if(ValidPassword){
-             var token = jwt.sign({UserName:user.UserName, Role:user.Role}, secret, { expiresIn: '24h' });
-                flage=true;
-                message="user authenticated";
-                userNameAuthenticated = user.UserName ;
-               res.json({success:flage, message:message, token:token});
-             }else {
-               flage=false;
-               message="invalid password";
-                res.json({success:flage, message:message});
-             }
-           }else {
-             flage=false;
-             message="Password was not provided";
-              res.json({success:flage, message:message});
-           }
-         }
-         res.json({success:flage, message:message});
-     });
-  });
-
-
 
 //current user route
   router.post('/me',function (req,res) {

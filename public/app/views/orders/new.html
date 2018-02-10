@@ -139,7 +139,10 @@
               <th>معلومات اضافية</th>
               <th>الحجم</th>
               <th>بلايز</th>
-              <th>الاحجام</th>
+              <th>صدر </th>
+              <th>ظهر</th>
+              <th>كتف</th>
+              <th>كم</th>
               <th>حذف</th>
 
             </tr>
@@ -151,10 +154,14 @@
               <td>{{item.GColor}}</td>
               <td>{{item.PColor}}</td>
               <td>{{item.Note}}</td>
-              <td>{{item.Size}}</td>
               <td>{{item.Tshit}}</td>
-              <td>
-                <table ng-if="!item.Tshit" class="table table table-striped table-bordered table-hover size-table">
+              <td>{{item.PrintOnChest}}</td>
+              <td>{{item.PrintOnBack}}</td>
+              <td>{{item.PrintOnShoulder}}</td>
+              <td>{{item.PrintOnSleeve}}</td>
+              <td  ng-if="!item.Tshit">{{item.Size}}</td>
+              <td  ng-if="item.Tshit">
+                <table class="table table table-striped table-bordered table-hover size-table">
                   <thead>
                     <th>s</th>
                     <th>m</th>
@@ -260,6 +267,30 @@
               <label for="bgcolor"> الحجم </label>
               <input type="text"class="form-control input-sm" id="bgcolor" ng-model="item.Size" placeholder="">
             </div>
+            <div class="checkbox" ng-show="item.Tshit">
+            <label>
+              <input class="pull-right" type="checkbox" ng-model="item.PrintOnBack">
+              <span class="check-box-span">الطباعة على الظهر </span>
+            </label>
+            </div>
+            <div class="checkbox" ng-show="item.Tshit">
+            <label>
+              <input class="pull-right" type="checkbox" ng-model="item.PrintOnChest">
+              <span class="check-box-span">الطباعة على الصدر </span>
+            </label>
+            </div>
+            <div class="checkbox" ng-show="item.Tshit">
+            <label>
+              <input class="pull-right" type="checkbox" ng-model="item.PrintOnSleeve">
+              <span class="check-box-span">الطباعة على الكم </span>
+            </label>
+            </div>
+            <div class="checkbox" ng-show="item.Tshit">
+            <label>
+              <input class="pull-right" type="checkbox" ng-model="item.PrintOnShoulder">
+              <span class="check-box-span">الطباعة على الكتف </span>
+            </label>
+            </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
@@ -276,6 +307,7 @@
               <span class="check-box-span">بلايز </span>
             </label>
           </div>
+
           </div>
         </div>
 

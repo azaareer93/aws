@@ -65,6 +65,22 @@ mongoose.Promise = global.Promise;
           type:Boolean,
           default:null
         },
+        PrintOnBack:{
+          type:Boolean,
+          default:null
+        },
+        PrintOnChest:{
+          type:Boolean,
+          default:null
+        },
+        PrintOnSleeve:{
+          type:Boolean,
+          default:null
+        },
+        PrintOnShoulder:{
+          type:Boolean,
+          default:null
+        },
         Status:{
           type:String,
           default:null

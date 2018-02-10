@@ -16,8 +16,7 @@
   <div class="row">
     <div class="col-sm-1"></div>
     <div class="col-sm-10 well">
-      <div class="col-md-12">
-
+      <div class="col-md-12" ng-if="!UserEditMode">
         <form class="form-inline new-user-form">
               <div class="form-group">
                 <label for="UserName">اسم المستخدم</label>
@@ -41,7 +40,36 @@
                   </select>
               </div>
               <button type="submit" class="btn btn-default" ng-click=saveUsers(user)> اضافة مستخدم جديد</button>
+            </form>
            </div>
+
+           <div class="col-md-12 text-warning" ng-if="UserEditMode">
+             <form class="form-inline new-user-form">
+                   <div class="form-group">
+                     <label for="UserName">اسم المستخدم</label>
+                     <input type="text" class="form-control" id="UserName" placeholder="UserName" ng-model="UserToEdit.UserName">
+                   </div>
+                   <div class="form-group">
+                     <label for="Password">كلمة السر</label>
+                     <input type="password" class="form-control" id="Password" placeholder="********" ng-model="UserToEdit.Password">
+                   </div>
+                   <div class="form-group">
+                     <label for="conPassword">تأكيد كلمة السر</label>
+                     <input type="password" class="form-control" id="conPassword" placeholder="********" ng-model="UserToEdit.conPassword">
+                   </div>
+                   <div class="form-group">
+                     <label for="Role">النوع</label>
+                     <select class="form-control" id="Role" ng-model="UserToEdit.Role">
+                         <option value="ADMIN">مسؤول</option>
+                         <option value="GRAPHIC">جرافيك</option>
+                         <option value="SALES">مبيعات</option>
+                         <option value="WORKSHOP">مشغل</option>
+                       </select>
+                   </div>
+                   <button type="submit" class="btn btn-success" ng-click=EditUsers(UserToEdit)>تعديل البيانات</button>
+                   <button type="submit" class="btn btn-danger" ng-click=CancelEditUsers()>الغاء</button>
+                 </form>
+                </div>
            <hr/>
            <hr/>
            <input type="text" ng-model="search_users" class="form-control" placeholder=" البحث في السجل">
@@ -53,13 +81,20 @@
                <th ng-click="sortu('Role')"> النوع
                  <span class="glyphicon sort-icon" ng-show="sortByu=='Role'" ng-class="{'glyphicon-chevron-up':reverse1,'glyphicon-chevron-down':!reverse1}"></span>
                </th>
-
+               <th>خيارات
+               </th>
              </tr>
            </thead>
            <tbody>
              <tr dir-paginate="user in Users|orderBy:sortByu:reverse1|filter:search_users|itemsPerPage:5" pagination-id="user">
                <td>{{user.UserName}}</td>
                <td>{{user.Role}}</td>
+               <td  >
+                 <div class="btn-group">
+                  <button class="btn btn-warning" ng-click="PutUserToEdit(user)" ng-disabled='UserEditMode'>تعديل</button>
+                  <button class="btn btn-danger" ng-disabled='UserEditMode'>حذف</button>
+                </div>
+               </td>
              </tr>
            </tbody>
          </table>
@@ -95,7 +130,7 @@
              </tr>
            </thead>
            <tbody>
-             <tr dir-paginate="action in Logs|orderBy:sortBy:reverse|filter:search_actions|itemsPerPage:5 " pagination-id="action">
+             <tr dir-paginate="action in Logs|orderBy:sortBy:reverse|filter:search_actions|itemsPerPage:5 " pagination-id="action" ng-init="sortBy='-Date'">
                <td>{{action.UserName}}</td>
                <td>{{action.Date | date:'hh:mm MM/dd/yyyy '}}</td>
                <td>{{action.Action}}</td>

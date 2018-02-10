@@ -64,7 +64,7 @@ angular.module('MainController', ['AuthServices', 'queryService', 'angularUtils.
           $scope.Users.push(res.data.user);
           toastr.success(res.data.message);
         }else {
-          toastr.error("تأكد من صحة البيانات المدخلة");
+          toastr.error(res.data.message);
         }
       }).catch(function(err) {
       });
@@ -74,7 +74,6 @@ angular.module('MainController', ['AuthServices', 'queryService', 'angularUtils.
 
     $scope.getLogs = function() {
       qService.query("GET", "/api/logs/").then(function(res) {
-        console.log(res.data);
         if (res.data.success) {
           $scope.Logs = res.data.logs;
         } else {
@@ -128,7 +127,6 @@ angular.module('MainController', ['AuthServices', 'queryService', 'angularUtils.
 
     $scope.viewItem = function(item) {
       $scope.ItemToView = item;
-      console.log($scope.ItemToView);
     }
 
     $scope.ChangeitemStatus = function(item, itemStatus) {
@@ -424,6 +422,41 @@ angular.module('MainController', ['AuthServices', 'queryService', 'angularUtils.
     scrollDown = function(id) {
       var scroller = document.getElementById(id);
       scroller.scrollTop = scroller.scrollHeight + 100;
+    }
+
+    $scope.PutUserToEdit = function (user) {
+      $scope.UserToEdit = user
+      $scope.UserEditMode = true
+    }
+
+    $scope.EditUsers = function (EditUsers) {
+      if(EditUsers.Password !=EditUsers.conPassword){
+        toastr.error("كلمة السر غير مساوية للتأكيد");
+        return false
+      }
+
+      if(!EditUsers.Password || EditUsers.Password.length<4){
+        toastr.error("كلمة السر قصيرة .. الحد الادنى 4 ");
+        return false
+      }
+
+      qService.query('PUT','/api/editUser/', EditUsers, null).then(function(data) {
+        if (!data.data.success) {
+          toastr.error(data.data.message);
+        } else {
+          toastr.success(data.data.message);
+          $scope.getUsers();
+          $scope.getLogs();
+          $scope.UserEditMode = false;
+        }
+      }).catch(function(err) {
+        toastr.error("تأكد من صحة البيانات المدخلة");
+      });
+    }
+
+    $scope.CancelEditUsers = function () {
+      $scope.UserToEdit = null
+      $scope.UserEditMode = false
     }
 
     $scope.checkSession = function() {

@@ -89,12 +89,12 @@
           <div class="order-link" ng-click=selectOrder(Order._id)>
             <div class="order-number"> رقم الطلب: {{Order.SerialNumber}} </div>
             <small class="order-date">{{Order.date | date : 'EEE, d/MMM/y'}}</small>
-            <div>
+            <div ng-if="User.Role!='WORKSHOP'">
               <span class="label label-success" ng-if="Order.Status==3">مكتمل</span>
               <span class="label label-warning" ng-if="Order.Status==2">قيد التنفيذ</span>
               <span class="label label-danger" ng-if="Order.Status==1">لم يبدأ</span>
             </div>
-            <div class="">
+            <div class="" ng-if="User.Role!='WORKSHOP'">
               <span class="label label-success" ng-if="Order.OrderPaymentStatus==3">كلي</span>
               <span class="label label-warning" ng-if="Order.OrderPaymentStatus==2">جزئي</span>
               <span class="label label-danger" ng-if="Order.OrderPaymentStatus==1">غير مدفوع</span>
@@ -110,16 +110,16 @@
          <div class="panel panel-default">
            <div class="panel-heading">
             <strong> قائمة العينات</strong>
-           <a href="" data-toggle="modal" data-target="#AdditemModal"><span class="glyphicon glyphicon-plus"></span> </a>
+           <a href="" ng-if="User.Role!='WORKSHOP'" data-toggle="modal" data-target="#AdditemModal"><span class="glyphicon glyphicon-plus"></span> </a>
          </div>
            <div class="panel-body">
              <table class="table item-table">
                <tbody>
-                 <tr ng-if="selectedOrder.Items.length>0" ng-repeat="item in selectedOrder.Items">
+                 <tr ng-if="selectedOrder.Items.length>0 " ng-repeat="item in selectedOrder.Items" ng-hide="(User.Role=='WORKSHOP' && !(item.Status=='APPROVED' ||item.Status=='CURRENT' || item.Status=='READY' || item.Status=='COMPLETED'))">
                   <th>#{{$index+1}}</th>
-                  <td  ng-if="User.Role!='SALES'">
+                  <td>
                     <select class="form-control" id="Status" ng-model="item.Status" ng-change="ChangeitemStatus(item, item.Status)">
-                        <option value="APPROVED" ng-if="User.Role=='ADMIN' || User.Role=='GRAPHIC'">موافق عليه</option>
+                        <option value="APPROVED" ng-if="User.Role=='ADMIN' || User.Role=='GRAPHIC' || User.Role=='GRAPHIC'">موافق عليه</option>
                         <option value="CURRENT" ng-if="User.Role=='ADMIN' || User.Role=='GRAPHIC' || User.Role=='WORKSHOP'">قيد التنفيذ</option>
                         <option value="READY"  ng-if="User.Role=='ADMIN' || User.Role=='GRAPHIC' || User.Role=='WORKSHOP'">جاهز للتسليم</option>
                         <option value="COMPLETED"  ng-if="User.Role=='ADMIN' || User.Role=='GRAPHIC' || User.Role=='WORKSHOP'">تم</option>
@@ -134,10 +134,10 @@
                      <button class="btn btn-warning btn-sm"
                         data-toggle="modal"
                         data-target="#EdititemModal"
-                        ng-if="User.Role=='ADMIN' || User.Role=='GRAPHIC'"
+                        ng-if="User.Role=='ADMIN' || User.Role=='GRAPHIC' || User.Role=='SALES'"
                         ng-click=PutItemToEdit(item)><i class="glyphicon glyphicon-edit"></i></button>
                     <button class="btn btn-danger btn-sm"
-                       ng-if="User.Role=='ADMIN' || User.Role=='GRAPHIC'"
+                       ng-if="User.Role=='ADMIN'"
                        ng-click="removeItem(item._id)"><i class="glyphicon glyphicon-trash"></i></button>
                        </div>
                    </td>
@@ -154,7 +154,7 @@
          <div class="panel panel-default">
            <div class="panel-heading">
             <strong>  معلومات الزبون </strong>
-           <a href="" > <span class="glyphicon glyphicon-edit"  data-toggle="modal" data-target="#ClientModal"></span> </a>
+           <a href="" ng-if="User.Role!='WORKSHOP'"> <span class="glyphicon glyphicon-edit"  data-toggle="modal" data-target="#ClientModal"></span> </a>
           </div>
            <div class="panel-body">
              <table class="table item-table">
@@ -229,7 +229,7 @@
         </div>
       </div> -->
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3" ng-if="User.Role!='WORKSHOP'">
       <div class="panel-group">
        <div class="panel panel-success">
          <div class="panel-heading">
@@ -416,6 +416,28 @@
         </table>
         <table class="table table-striped table-bordered table-hover table-condensed" ng-if="ItemToView.Tshit">
           <thead>
+            <th>الطباعة على الظهر</th>
+            <th>الطباعة على الصدر</th>
+            <th>الطباعة على الكم</th>
+            <th>الطباعة على الكتف</th>
+          </thead>
+          <tbody>
+            <td>
+              <span  ng-class="{true: 'glyphicon glyphicon-ok text-success', false:'glyphicon glyphicon-remove text-danger',null:'glyphicon glyphicon-remove text-danger' }[ItemToView.PrintOnBack]"></span>
+            </td>
+            <td>
+              <span  ng-class="{true: 'glyphicon glyphicon-ok text-success', false:'glyphicon glyphicon-remove text-danger',null:'glyphicon glyphicon-remove text-danger' }[ItemToView.PrintOnChest]"></span>
+            </td>
+            <td>
+              <span  ng-class="{true: 'glyphicon glyphicon-ok text-success', false:'glyphicon glyphicon-remove text-danger',null:'glyphicon glyphicon-remove text-danger' }[ItemToView.PrintOnSleeve]"></span>
+            </td>
+            <td>
+              <span  ng-class="{true: 'glyphicon glyphicon-ok text-success', false:'glyphicon glyphicon-remove text-danger',null:'glyphicon glyphicon-remove text-danger' }[ItemToView.PrintOnShoulder]"></span>
+            </td>
+          </tbody>
+        </table>
+        <table class="table table-striped table-bordered table-hover table-condensed" ng-if="ItemToView.Tshit">
+          <thead>
             <th>s</th>
             <th>m</th>
             <th>l</th>
@@ -560,6 +582,30 @@
             <div class="form-group" ng-if="!item.Tshit">
               <label for="bgcolor" > الحجم </label>
               <input type="text"class="form-control input-sm" id="bgcolor" ng-model="item.Size" placeholder="">
+            </div>
+            <div class="checkbox" ng-show="item.Tshit">
+            <label>
+              <input class="pull-right" type="checkbox" ng-model="item.PrintOnBack">
+              <span class="check-box-span">الطباعة على الظهر </span>
+            </label>
+            </div>
+            <div class="checkbox" ng-show="item.Tshit">
+            <label>
+              <input class="pull-right" type="checkbox" ng-model="item.PrintOnChest">
+              <span class="check-box-span">الطباعة على الصدر </span>
+            </label>
+            </div>
+            <div class="checkbox" ng-show="item.Tshit">
+            <label>
+              <input class="pull-right" type="checkbox" ng-model="item.PrintOnSleeve">
+              <span class="check-box-span">الطباعة على الكم </span>
+            </label>
+            </div>
+            <div class="checkbox" ng-show="item.Tshit">
+            <label>
+              <input class="pull-right" type="checkbox" ng-model="item.PrintOnShoulder">
+              <span class="check-box-span">الطباعة على الكتف </span>
+            </label>
             </div>
           </div>
           <div class="col-md-6">
@@ -709,6 +755,30 @@
               <div class="form-group" ng-if="!itemToEdit.Tshit">
                 <label for="bgcolor"> الحجم </label>
                 <input type="text"class="form-control input-sm" id="bgcolor" ng-model="itemToEdit.Size" placeholder="">
+              </div>
+              <div class="checkbox" ng-show="itemToEdit.Tshit">
+              <label>
+                <input class="pull-right" type="checkbox" ng-model="itemToEdit.PrintOnBack">
+                <span class="check-box-span">الطباعة على الظهر </span>
+              </label>
+              </div>
+              <div class="checkbox" ng-show="itemToEdit.Tshit">
+              <label>
+                <input class="pull-right" type="checkbox" ng-model="itemToEdit.PrintOnChest">
+                <span class="check-box-span">الطباعة على الصدر </span>
+              </label>
+              </div>
+              <div class="checkbox" ng-show="itemToEdit.Tshit">
+              <label>
+                <input class="pull-right" type="checkbox" ng-model="itemToEdit.PrintOnSleeve">
+                <span class="check-box-span">الطباعة على الكم </span>
+              </label>
+              </div>
+              <div class="checkbox" ng-show="itemToEdit.Tshit">
+              <label>
+                <input class="pull-right" type="checkbox" ng-model="itemToEdit.PrintOnShoulder">
+                <span class="check-box-span">الطباعة على الكتف </span>
+              </label>
               </div>
             </div>
             <div class="col-md-6">

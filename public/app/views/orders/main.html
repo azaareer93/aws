@@ -85,7 +85,9 @@
       <div class="orders well" >
         <div class="order-data"
          ng-repeat="Order in OrderList|orderBy:sortBy:!reverse|filter:search"
-         ng-class="{true: 'active'}[selectedOrder._id == Order._id]" ng-cloak>
+         ng-class="{true: 'active'}[selectedOrder._id == Order._id]"
+         ng-hide="User.Role=='WORKSHOP' && (Order.Status==2 || Order.Status==3)"
+         ng-cloak>
           <div class="order-link" ng-click=selectOrder(Order._id)>
             <div class="order-number"> رقم الطلب: {{Order.SerialNumber}} </div>
             <small class="order-date">{{Order.date | date : 'EEE, d/MMM/y'}}</small>
@@ -94,13 +96,13 @@
               <span class="label label-warning" ng-if="Order.Status==2">قيد التنفيذ</span>
               <span class="label label-danger" ng-if="Order.Status==1">لم يبدأ</span>
             </div>
-            <div class="" ng-if="User.Role!='WORKSHOP'">
+            <div ng-if="User.Role!='WORKSHOP'">
               <span class="label label-success" ng-if="Order.OrderPaymentStatus==3">كلي</span>
               <span class="label label-warning" ng-if="Order.OrderPaymentStatus==2">جزئي</span>
               <span class="label label-danger" ng-if="Order.OrderPaymentStatus==1">غير مدفوع</span>
             </div>
             <div class="order-item"> عدد العينات: {{Order.Items.length}}</div>
-            <div class="order-total"> السعر الكلي: {{Order.TotalPrice}} </div>
+            <div class="order-total" ng-if="User.Role!='WORKSHOP'"> السعر الكلي: {{Order.TotalPrice}} </div>
           </div>
         </div>
       </div>

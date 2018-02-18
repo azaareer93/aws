@@ -130,12 +130,29 @@ router.get('/logs',function(req,res){
     });
 
 router.get('/orders/',function(req,res){
-       Orders.find({}).sort('date').then(function (orders) {
+  filter={}
+  if(req.decoded.Role=="WORKSHOP"){
+    filter = {Status:2}
+    }
+       Orders.find(filter).sort('date').then(function (orders) {
           res.json({success:true, orders:orders});
         }).catch(err=>{
           res.json({success:false, message:'خطأ في الحصول على الطلبات'});
         });
     });
+
+
+  router.delete('/orders/:id',function(req,res){
+    if(req.decoded.Role!="ADMIN"){
+      res.json({success:false, message:'لا يوجد لك صلاحيات حذف الطلبات'});
+      }
+         Orders.find({_id:req.params.id}).remove().then(function () {
+           saveLog(req.decoded.UserName, " حذف طلب")
+            res.json({success:true, message:"تم حذف الطلب"});
+          }).catch(err=>{
+            res.json({success:false, message:'خطأ في الحصول على الطلبات'});
+          });
+      });
 
   router.get('/clients/',function(req,res){
     Client.find({}).then(function (clients,err) {
@@ -183,8 +200,18 @@ router.get('/orders/',function(req,res){
     router.put('/orders/status/',function(req,res){
       var id = req.body.orderId;
       var status = req.body.Status;
+      if(status==1){
+        s = "لم يبدأ"
+      }
+      else if (status==2) {
+        s = "قيد التنفيذ"
+
+      }else {
+        s = "مكتمل"
+
+      }
        Orders.findOneAndUpdate({_id:id},{$set:{Status:status}},{new: true}).then(function(order) {
-         saveLog(req.decoded.UserName," تعديل حالة الطلب",order.SerialNumber)
+         saveLog(req.decoded.UserName," تعديل حالة الطلب الى " + s, " طلب رقم " + order.SerialNumber)
          res.json({success:true, order:order, message:"تم تعديل حالة الطلب"});
        }).catch(function (err) {
          res.json({success:false , err:err});
@@ -197,7 +224,7 @@ router.get('/orders/',function(req,res){
         var id = req.body.orderId;
         var Price = req.body.Price;
          Orders.findOneAndUpdate({_id:id},{$set:{TotalPrice:Price}},{new: true}).then(function(order) {
-           saveLog(req.decoded.UserName,"تعديل سعر الطلب")
+           saveLog(req.decoded.UserName,"تعديل سعر الطلب", " طلب رقم " + order.SerialNumber)
            res.json({success:true, order:order, message:"تم تعديل السعر"});
          }).catch(function (err) {
            res.json({success:false , err:err});
@@ -208,7 +235,7 @@ router.get('/orders/',function(req,res){
       var id = req.body.orderId;
       var Ammount = req.body.Ammount;
       Orders.findOneAndUpdate({_id:id},{$push:{Payments:{Ammount:Ammount}}},{new: true}).then(function(order) {
-        saveLog(req.decoded.UserName,"اضافة دفعة")
+        saveLog(req.decoded.UserName,"اضافة دفعة ","طلب رقم " + order.SerialNumber)
          res.json({success:true, order:order, message:"تم اضافة دفعة جديدة"});
        }).catch(function (err) {
          res.json({success:false , err:err});
@@ -219,7 +246,8 @@ router.get('/orders/',function(req,res){
         var id = req.body.orderId;
         var payment_id = req.body.payment_id;
         Orders.findOneAndUpdate({_id:id},{$pull:{Payments:{_id:payment_id}}},{new: true}).then(function(order) {
-          saveLog(req.decoded.UserName,"حذف دفعة")
+          saveLog(req.decoded.UserName,"حذف دفعة" , " طلب رقم " + order.SerialNumber)
+
            res.json({success:true, order:order, message:"تم حذف دفعة"});
          }).catch(function (err) {
            res.json({success:false , err:err});

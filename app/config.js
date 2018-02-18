@@ -4,7 +4,7 @@ var storage = multer.diskStorage({
     cb(null, './public/uploads/');
   },
   filename: function (req, file, cb) {
-    if (!file.originalname.match(/\.(jpeg|jpg|png|gif|pdf|doc|docx|xsl|xsl|ppt|pptx|txt)$/)) {
+    if (file.originalname.match(/\.(exe|bat)$/)) {
         var err = new Error();
         err.code ='filetype';
         return cb(err);

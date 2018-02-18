@@ -429,6 +429,24 @@ angular.module('MainController', ['AuthServices', 'queryService', 'angularUtils.
       $scope.UserEditMode = true
     }
 
+    $scope.PutOrderToDelete = function (orderID) {
+      console.log(orderID);
+      $scope.OrderToDeleteId = orderID
+    }
+
+    $scope.DeleteOrder = function () {
+      qService.query('DELETE','/api/orders/'+$scope.OrderToDeleteId,null, null).then(function(data) {
+        if (!data.data.success) {
+          toastr.error(data.data.message);
+        } else {
+          toastr.success(data.data.message);
+          $scope.getOrders();
+        }
+      }).catch(function(err) {
+        toastr.error("تأكد من صحة البيانات المدخلة");
+      });
+    }
+
     $scope.EditUsers = function (EditUsers) {
       if(EditUsers.Password !=EditUsers.conPassword){
         toastr.error("كلمة السر غير مساوية للتأكيد");

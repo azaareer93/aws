@@ -163,6 +163,11 @@ router.get('/orders/',function(req,res){
       });
 
   router.post('/orders/',function(req,res){
+
+    if(req.decoded.Role=="WORKSHOP"){
+      res.json({success:false, message:'لا يوجد لك صلاحيات اضافة طلبات'});
+      }
+
         var order = new Orders(req.body);
         if(req.body.Client){
           newClient = new Client(req.body.Client);

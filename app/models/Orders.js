@@ -38,7 +38,7 @@ mongoose.Promise = global.Promise;
     },
     ClientId:{
       type:String,
-      default:null
+      null:false,
     },
     Items:[{
         Name:{

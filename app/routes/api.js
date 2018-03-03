@@ -1,6 +1,5 @@
 var path             = require('path');
 var User       = require("../models/User");
-var Notifications = require("../models/Notifications");
 var Orders = require("../models/Orders");
 var Client = require("../models/Client");
 var Logs = require("../models/Logs");
@@ -182,7 +181,7 @@ router.get('/orders/',function(req,res){
                 res.json({success:true, order:order, message:"تم حفظ الطلب"})
               }
             }).catch(function (err) {
-              res.json({success:false , err:"لم يتم حفظ الطل"});
+              res.json({success:false , err:"لم يتم حفظ الطلب"});
             });
           }).catch(function (err) {
             res.json({success:false , err:err,  message:"لم يتم حفظ الطلب"});
@@ -302,7 +301,7 @@ router.get('/orders/',function(req,res){
          });
        }else {
          Orders.findOneAndUpdate({_id:id},{$push:{Items:item}},{new: true}).then(function(order) {
-           saveLog(req.decoded.UserName,"اضافة عينة")
+           saveLog(req.decoded.UserName,"اضافة عينة ","طلب رقم " + order.SerialNumber)
             res.json({success:true, order:order, message:"تم اضافة عينة"});
           }).catch(function (err) {
             res.json({success:false , err:err});
@@ -325,7 +324,7 @@ router.get('/orders/',function(req,res){
               filePath:req.file.path,
               fileSize:req.file.size,
               fileMimetype:req.file.mimetype}}},{new: true}).then(function(order) {
-                saveLog(req.decoded.UserName,"تحميل ملف")
+                saveLog(req.decoded.UserName,"تحميل ملف","طلب رقم" + order.SerialNumber)
 
               res.json({success:true, order:order, message:"تم تحميل الملف بنجاح"});
             }).catch(function (err) {

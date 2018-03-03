@@ -1,6 +1,7 @@
 angular.module('OrderController', ['AuthServices', 'queryService'])
   .controller('OrderCtrl', function($scope, $location,Auth, qService, toastr) {
     $scope.Order = {}
+    $scope.Order.Client = {}
     $scope.Order.Items=[]
     if (Auth.isLoggedIn()) {
       // Check if a the token expired
@@ -41,6 +42,8 @@ angular.module('OrderController', ['AuthServices', 'queryService'])
     $scope.clearClient = function (client) {
       $scope.isClientSelected = false;
       $scope.selectedClient = null;
+      $scope.Order.ClientId = null;
+
     };
 
     $scope.addItem = function (item) {
@@ -52,22 +55,44 @@ angular.module('OrderController', ['AuthServices', 'queryService'])
       $scope.Order.Items.splice(itemIndex,1);
     }
 
-    $scope.saveOrder = function(order) {
+    $scope.saveOrder = function() {
       order = $scope.Order
-      qService.query('POST', "/api/orders/", order).then(function(data) {
-        if (data.data.success) {
-          toastr.success(data.data.message);
-          console.log(data.data);
-            $location.path('/');
+      if(!order.ClientId){
+        if(!order.Client.Name){
+          toastr.error("الرجاء ادخال اسم الزبون ");
+          return false
         }
-        else {
-          console.log(data.data);
-          toastr.error(data.data.message);
+        if(!order.Client.Address){
+          toastr.error("الرجاء ادخال عنوان الزبون !");
+          return false
         }
-      }).catch(function(err) {
-        console.log(data.data);
-        toastr.error(data.data.message);
-      });
+        if(!order.Client.Tel1){
+          toastr.error("الرجاء ادخال الهاتف1 ");
+          return false
+        }
+        if(!order.Client.Email){
+          toastr.error("الرجاء ادخال البريد الاكتروني");
+          return false
+        }
+      }
+        qService.query('POST', "/api/orders/", order).then(function(data) {
+          if (data.data.success) {
+            toastr.success(data.data.message);
+            console.log(data.data);
+              $location.path('/');
+          }
+          else if (data.data.err) {
+            var error = data.data.err
+              if (error.code== 11000) {
+                toastr.error("رقم الهاتف او البريد الالكتروني مستخدم مسبقاً لزبون آخر");
+              }
+          }
+        }).catch(function(err) {
+          console.log(err);
+          toastr.error(data.data.err);
+
+        });
+
    }
 
   });

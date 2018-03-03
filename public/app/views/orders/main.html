@@ -159,7 +159,7 @@
            </div>
          </div>
       </div>
-      <div class="panel-group">
+      <div class="panel-group" ng-hide='User.Role=="WORKSHOP"'>
          <div class="panel panel-default">
            <div class="panel-heading">
             <strong>  معلومات الزبون </strong>
@@ -364,6 +364,7 @@
         </div>
       </div>
       <label class="btn btn-block btn-default btn-lg"
+             ng-hide='User.Role=="WORKSHOP"'
              for="orderFile">
              اختر ملف
 

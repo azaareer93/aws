@@ -7,6 +7,7 @@ mongoose.Promise = global.Promise;
 var ClientSchema = new Schema({
   Name:{
     type:String,
+    required:true,
     default:null
   },
   Address:{
@@ -23,7 +24,6 @@ var ClientSchema = new Schema({
   Tel2:{
     type:String,
     lowercase:true,
-    required:true,
     unique:true,
     default:null
   },
